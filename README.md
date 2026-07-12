@@ -37,7 +37,12 @@ npm run test        # Vitest (unit + integración con MockedProvider)
 - `admin1` / `Administrador#2025` (grupo Administradores)
 - `vendedor1` / `Vendedor#2025` (grupo Vendedores)
 
+## Skills de diseño (`ui-designer`)
+
+- `minimalist-ui` y `emil-design-eng` están copiadas en `.claude/skills/` (contenido real de [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) variante `minimalist-skill`, y [emilkowalski/skills](https://github.com/emilkowalski/skills)). El sistema de diseño (`src/design-system/tokens.css` y componentes de `src/components/`) ya está re-teñido siguiendo `minimalist-ui`: paleta monocromática cálida (`#111111`/`#F7F6F3`), sombras casi inexistentes, radios acotados (6–12px), sin `Inter`/`Roboto`, cero `rounded-full` en botones/cards; y las transiciones usan las curvas/duraciones de `emil-design-eng` (`cubic-bezier(0.23,1,0.32,1)`, `scale(0.97)` en botones, nunca animar desde `scale(0)`).
+- Estas skills se cargan al reiniciar Claude Code (o Cowork) con este proyecto como working directory — en esta sesión no estaban disponibles como `Skill` invocable porque el cwd de la sesión es la carpeta padre, no `Frontend/`.
+- `impeccable` sigue pendiente: requiere `npx impeccable install` en una terminal real con red (no disponible en este entorno) — ver la sección "Cómo instalar impeccable" en `.claude/agents/agent-ui-designer.md`.
+
 ## Pendiente / notas conocidas
 
-- Las 3 skills de diseño de referencia del roadmap (`taste-skill`, `impeccable`, `emil-design-eng`) no se instalaron como skills de Claude Code en esta sesión (requiere `npx skills add ...` interactivo/con red hacia GitHub) — el sistema de diseño se construyó a mano siguiendo esa misma dirección visual (minimalista, tipo backoffice). Se pueden instalar más adelante sin conflicto con lo ya construido.
 - E2E con Playwright: `@playwright/test` está instalado como devDependency pero no hay specs formales en `e2e/` todavía — se usó para verificación manual puntual durante el desarrollo (login → clientes → productos → venta → historial).

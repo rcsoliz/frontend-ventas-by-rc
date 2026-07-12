@@ -1,27 +1,30 @@
 :root {
-  --color-bg: #f7f7f8;
+  /* Warm monochrome (minimalist-ui): el color es un recurso escaso, casi
+     todo se resuelve en escala de grises cálidos + acentos pastel. */
+  --color-bg: #f7f6f3;
   --color-surface: #ffffff;
-  --color-border: #e4e4e7;
-  --color-border-strong: #d4d4d8;
-  --color-text: #18181b;
-  --color-text-muted: #71717a;
-  --color-text-subtle: #a1a1aa;
+  --color-border: #eaeaea;
+  --color-border-strong: #dcdad5;
+  --color-text: #111111;
+  --color-text-muted: #5f5e5b;
+  --color-text-subtle: #918f8a;
 
-  --color-primary: #4f46e5;
-  --color-primary-hover: #4338ca;
+  --color-primary: #111111;
+  --color-primary-hover: #333333;
   --color-primary-text: #ffffff;
 
-  --color-danger: #dc2626;
-  --color-danger-bg: #fef2f2;
-  --color-danger-border: #fecaca;
+  --color-danger: #9f2f2d;
+  --color-danger-bg: #fdebec;
+  --color-danger-border: #f3d2d1;
 
-  --color-success: #16a34a;
-  --color-success-bg: #f0fdf4;
-  --color-success-border: #bbf7d0;
+  --color-success: #346538;
+  --color-success-bg: #edf3ec;
+  --color-success-border: #cfe3cd;
 
-  --color-focus-ring: #a5b4fc;
+  --color-focus-ring: rgba(17, 17, 17, 0.35);
 
-  --font-sans: -apple-system, "Segoe UI", Inter, system-ui, sans-serif;
+  --font-sans: "Helvetica Neue", "Segoe UI", -apple-system, system-ui, sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, monospace;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -33,44 +36,46 @@
 
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-lg: 14px;
+  --radius-lg: 12px;
 
-  --shadow-sm: 0 1px 2px rgba(24, 24, 27, 0.06);
-  --shadow-md: 0 4px 16px rgba(24, 24, 27, 0.08);
-  --shadow-lg: 0 12px 40px rgba(24, 24, 27, 0.16);
+  /* Sombras casi inexistentes: ultra difusas, opacidad muy baja. */
+  --shadow-sm: 0 1px 2px rgba(17, 17, 17, 0.03);
+  --shadow-md: 0 2px 8px rgba(17, 17, 17, 0.04);
+  --shadow-lg: 0 8px 28px rgba(17, 17, 17, 0.08);
 
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration-fast: 120ms;
-  --duration-base: 180ms;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --duration-fast: 140ms;
+  --duration-base: 200ms;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #101012;
-    --color-surface: #18181b;
-    --color-border: #27272a;
-    --color-border-strong: #3f3f46;
-    --color-text: #f4f4f5;
-    --color-text-muted: #a1a1aa;
-    --color-text-subtle: #71717a;
+    --color-bg: #121110;
+    --color-surface: #1a1918;
+    --color-border: #2b2a28;
+    --color-border-strong: #3d3b38;
+    --color-text: #f2f1ee;
+    --color-text-muted: #a8a6a1;
+    --color-text-subtle: #78766f;
 
-    --color-primary: #818cf8;
-    --color-primary-hover: #a5b4fc;
-    --color-primary-text: #101012;
+    --color-primary: #f2f1ee;
+    --color-primary-hover: #ffffff;
+    --color-primary-text: #121110;
 
-    --color-danger: #f87171;
-    --color-danger-bg: #2a1315;
-    --color-danger-border: #7f1d1d;
+    --color-danger: #e5928f;
+    --color-danger-bg: #2a1615;
+    --color-danger-border: #4a2422;
 
-    --color-success: #4ade80;
-    --color-success-bg: #0f2417;
-    --color-success-border: #14532d;
+    --color-success: #8fbf90;
+    --color-success-bg: #16211a;
+    --color-success-border: #2a3d2c;
 
-    --color-focus-ring: #6366f1;
+    --color-focus-ring: rgba(242, 241, 238, 0.4);
 
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.55);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.28);
+    --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.4);
   }
 }
 
@@ -89,6 +94,7 @@ body {
   font-family: var(--font-sans);
   background: var(--color-bg);
   color: var(--color-text);
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
