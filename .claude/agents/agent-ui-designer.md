@@ -29,10 +29,14 @@ Si no podés correr `npx` con red en tu máquina, `impeccable` queda como pendie
 
 ## Alcance
 
-- `src/components/` — sistema de componentes compartido: `Button`, `Input`, `Select`, `Table`, `Modal`, `Toast`, `Card`, `EmptyState`, `Skeleton` (estados de carga).
-- Tokens de diseño (color, tipografía, espaciado, radios, sombras) — un solo lugar (ej. `src/design-system/tokens.ts` o CSS variables), no valores sueltos repetidos por componente.
+- `src/components/` — sistema de componentes compartido: `Button`, `Input`, `Select`, `Table`, `Modal`, `Card`, `EmptyState`, `Skeleton` (estados de carga).
+- `src/components/AppShell.tsx` (o `Layout.tsx`) — header/nav de toda la app. **Responsive obligatorio**: por debajo de `md` (~768px), ocultar los links de navegación (`Ventas`, `Clientes`, `Productos`) y el bloque de usuario/logout, mostrar un botón de hamburguesa a la izquierda que abre un drawer lateral con esos mismos links + los datos del vendedor (consumidos de `useAuth()`, de `auth-frontend`) + "Cerrar sesión" abajo. Arriba de `md`, nav horizontal. Bug ya detectado sin esto: en pantallas angostas los links y el bloque de usuario se aprietan y se solapan.
+- Tablas: envolver siempre en un contenedor con `overflow-x-auto` propio — nunca dejar que el scroll horizontal se escape del contenedor y genere una barra de scroll suelta a la derecha de todo el layout.
+- Tokens de diseño (color, tipografía, espaciado, radios, sombras) — un solo lugar (ej. `src/design-system/tokens.ts` o CSS variables), no valores sueltos repetidos por componente. Deben salir de `minimalist-ui` (paleta monocromática cálida, tipografía con contraste, cero gradientes/sombras pesadas), no inventarse aparte.
+- Tema visual de `sonner` (instalada por `catalogo-feature`/`ventas-feature` para toasts de mutations): ajustar colores/tipografía/radios a los tokens de `minimalist-ui` — no dejar el estilo por defecto de la librería sin tocar, se nota como un elemento ajeno al resto de la app.
 - Estados vacíos y de error con copy pensado (ej. "Aún no registraste ventas — creá la primera desde el catálogo", no una tabla en blanco ni un mensaje genérico "No data").
 - Pulido visual de las pantallas de `catalogo-feature` y `ventas-feature`: layout, jerarquía visual, feedback de carga/error, accesibilidad básica (contraste, focus visible, labels).
+- Errores de formulario: `catalogo-feature`/`ventas-feature` usan `react-hook-form` + `zod` para la lógica de validación — vos das el estilo visual de esos estados de error inline (texto rojo bajo el campo, borde del input en rojo), no reemplaces eso por el globo de validación nativo del navegador.
 
 ## Reglas no negociables
 
@@ -43,4 +47,4 @@ Si no podés correr `npx` con red en tu máquina, `impeccable` queda como pendie
 
 ## Al terminar una tarea
 
-Confirma que el componente/pantalla nuevo reusa tokens y componentes existentes en vez de crear estilos ad-hoc, y que no quedó ningún estado de carga/error/vacío sin diseñar.
+Confirma que el componente/pantalla nuevo reusa tokens y componentes existentes en vez de crear estilos ad-hoc, que no quedó ningún estado de carga/error/vacío sin diseñar, y que se ve bien probado en al menos 3 anchos (mobile ~375px, tablet ~768px, desktop ~1280px) — en particular el nav (drawer en mobile, horizontal en desktop) y cualquier tabla (scroll contenido, nunca fuera del layout).

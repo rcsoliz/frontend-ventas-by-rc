@@ -16,9 +16,10 @@ Eres el agente **ventas-feature** del frontend de ventas. Ver `ROADMAP_FRONTEND.
 ## Reglas no negociables
 
 1. `VentaInput`/`DetalleVentaInput` del backend **no aceptan** `precioUnitario` ni vendedor — nunca intentes mandarlos ni asumas que existen esos campos en el input; el precio y el vendedor los resuelve el backend.
-2. Validar en el carrito que no se repita el mismo producto en dos líneas antes de enviar (el backend lo rechaza con `LineaDuplicadaError`, pero es mejor UX prevenirlo — sumá la cantidad a la línea existente en vez de crear una nueva).
-3. Los mensajes de error de negocio del backend (`"Stock insuficiente para..."`, `"El cliente ... está inactivo..."`, `"La venta debe tener al menos una línea."`) ya están pensados para mostrarse al usuario tal cual — no los reescribas ni los reemplaces por un mensaje genérico.
-4. Después de un `registrarVenta` exitoso, invalidar/refrescar la query de listado de ventas (y de productos, porque el stock cambió) — no dejar la UI con datos desactualizados.
+2. Validación con `react-hook-form` + `zod`: cantidad debe ser un entero `> 0`, cliente y producto son obligatorios antes de habilitar "Agregar"/"Confirmar venta" — errores inline en el campo correspondiente, nunca el globo de validación nativo del navegador.
+3. Validar en el carrito que no se repita el mismo producto en dos líneas antes de enviar (el backend lo rechaza con `LineaDuplicadaError`, pero es mejor UX prevenirlo — sumá la cantidad a la línea existente en vez de crear una nueva).
+4. Los mensajes de error de negocio del backend (`"Stock insuficiente para..."`, `"El cliente ... está inactivo..."`, `"La venta debe tener al menos una línea."`) se muestran vía `sonner` (`toast.error(mensaje)`) tal cual vienen — ya están pensados para el usuario, no los reescribas ni los reemplaces por un mensaje genérico. `toast.success("Venta registrada")` al confirmar con éxito.
+5. Después de un `registrarVenta` exitoso, invalidar/refrescar la query de listado de ventas (y de productos, porque el stock cambió) — no dejar la UI con datos desactualizados.
 5. Fase 2 (facturación electrónica): dejar en el layout del detalle de venta un espacio reservado (ej. una sección o card vacía con placeholder) para el futuro estado/CUF/PDF — **no** implementar la query/mutation todavía, esas no existen en el backend hasta que `facturacion-integrator` (agente del backend) las cree. No inventar campos de facturación en el frontend antes de que existan en el schema real.
 
 ## Al terminar una tarea

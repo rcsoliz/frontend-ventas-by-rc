@@ -4,6 +4,8 @@ Consume el backend `backup-ventas-by-rc` (Django + Strawberry GraphQL) revisado 
 
 Stack: Vite + React + TypeScript, Apollo Client (con `@graphql-codegen` para tipar queries/mutations desde el schema real del backend vía introspección), React Router.
 
+Validación de formularios y feedback: `react-hook-form` + `zod` (como resolver) en vez de validación nativa del navegador (`required` de HTML5, que produce el globo genérico "Completa este campo" sin poder estilizarlo) — los errores se muestran inline, con el mismo sistema de diseño que el resto del formulario. `sonner` para toasts de éxito/error de mutations — encaja con la skill `emil-design-eng` ya instalada (mismo autor, Emil Kowalski, con una sección dedicada a los principios de Sonner).
+
 Diseño profesional: 3 skills reales, confirmadas contra sus repos —
 [`taste-skill`](https://github.com/Leonxlnx/taste-skill) (dirección visual anti-slop),
 [`impeccable`](https://github.com/pbakaus/impeccable) (setup de contexto + 23 comandos de control de calidad: `critique`, `audit`, `polish`, etc.),
@@ -36,23 +38,28 @@ Nota de seguridad heredada del backend: `login` devuelve un JWT sin mecanismo de
 
 ### 3. `ui-designer`
 
-- [ ] Instalar las 3 skills (`npx skills add https://github.com/Leonxlnx/taste-skill`, `npx impeccable install`, `npx skills@latest add emilkowalski/skills`) y correr `/impeccable init` una sola vez al principio (superficie = "product").
-- [ ] Al iniciar cualquier pantalla o componente nuevo: `taste-skill` como dirección visual base, `emil-design-eng` para animaciones/microinteracciones, y cerrar con `/impeccable critique` + `/impeccable audit` + `/impeccable polish` antes de darla por terminada — ver detalle completo en `agent-ui-designer.md`.
+- [ ] Instalar las skills: `minimalist-ui` y `emil-design-eng` copiando su `SKILL.md` a `.claude/skills/<nombre>/SKILL.md` (ya hecho); `impeccable` vía `npx impeccable install` en una terminal real con red, seguido de `/impeccable init` (superficie = "product").
+- [ ] Al iniciar cualquier pantalla o componente nuevo: `minimalist-ui` como dirección visual base, `emil-design-eng` para animaciones/microinteracciones, y cerrar con `/impeccable critique` + `/impeccable audit` + `/impeccable polish` (si `impeccable` ya está instalado) antes de darla por terminada — ver detalle completo en `agent-ui-designer.md`.
+- [ ] **AppShell responsive** (nav + header): por debajo de `md` (~768px), ocultar los links de navegación y el bloque de usuario, mostrar un botón de hamburguesa a la izquierda que abre un drawer lateral con esos mismos links + datos del vendedor (de `useAuth()`, de `auth-frontend`) + "Cerrar sesión". Arriba de `md`, nav horizontal como ya está. Sin esto, en pantallas angostas los links y el bloque de usuario se aprietan y se solapan (bug ya detectado en la pantalla de Productos).
+- [ ] **Tabla responsive**: contener el scroll horizontal dentro de un wrapper de la tabla (`overflow-x-auto` en el contenedor, no que se escape de la página) — evita la barra de scroll suelta a la derecha de todo el layout.
+- [ ] Tema visual de `sonner` (toasts): colores/tipografía acordes a los tokens de `minimalist-ui` (paleta monocromática cálida, sin sombras pesadas) — no dejar el estilo por defecto de la librería sin ajustar.
 - [ ] Sistema de diseño compartido: tokens (color, tipografía, espaciado) + componentes base en `src/components/` (Button, Input, Select, Table, Modal, Toast, Card, EmptyState, Skeleton de carga).
 - [ ] Pasada de pulido sobre las pantallas que entreguen `catalogo-feature` y `ventas-feature` — este agente no escribe la lógica de datos/GraphQL de esas pantallas, solo su capa visual y de interacción.
 - [ ] Estados vacíos y de error con buen copy (ej. "Aún no registraste ventas" en vez de una tabla en blanco).
 
 ### 4. `catalogo-feature`
 
-- [ ] Clientes: listado (`clientes(soloActivos)`), alta (`crearCliente`) — formulario con validación de correo antes de enviar (el backend ya rechaza duplicados, pero el error debe verse claro en el form, no como un toast genérico).
-- [ ] Productos: catálogo (`productos(soloActivos)`), alta (`crearProducto`, solo visible/accesible para el grupo `Administradores`, coordinar el gating con `auth-frontend`).
+- [ ] Clientes: listado (`clientes(soloActivos)`), alta (`crearCliente`) — formulario con `react-hook-form` + `zod` (validación de campos requeridos y formato de correo antes de enviar, con errores inline, no el globo nativo del navegador). El error de "correo duplicado" del backend (`ClienteDuplicadoError`) se muestra en el campo correspondiente, no como toast genérico.
+- [ ] Productos: catálogo (`productos(soloActivos)`), alta (`crearProducto`, solo visible/accesible para el grupo `Administradores`, coordinar el gating con `auth-frontend`) — mismo patrón `react-hook-form` + `zod`.
+- [ ] `sonner`: `toast.success(...)` al crear cliente/producto exitosamente; `toast.error(mensaje)` para errores que no sean de un campo específico (ej. error de red).
 - [ ] Ambas pantallas consumen los hooks tipados generados por `graphql-client` — no escribir queries GraphQL sueltas dentro de los componentes.
 
 ### 5. `ventas-feature`
 
 - [ ] Carrito/multi-línea: seleccionar cliente + agregar productos con cantidad antes de confirmar. Validar en el cliente que no se repita el mismo producto en dos líneas (el backend ya lo rechaza con `LineaDuplicadaError`, pero conviene prevenirlo en el form).
 - [ ] `registrarVenta`: nunca mandar `precioUnitario` ni el vendedor desde el frontend — el input (`VentaInput`/`DetalleVentaInput`) del backend directamente no los acepta.
-- [ ] Mostrar errores de negocio del backend tal cual (`"Stock insuficiente para..."`, `"El cliente ... está inactivo..."`) — son mensajes ya pensados para mostrarse al usuario, no reescribirlos.
+- [ ] Mostrar errores de negocio del backend tal cual (`"Stock insuficiente para..."`, `"El cliente ... está inactivo..."`) vía `sonner` (`toast.error(mensaje)`) — son mensajes ya pensados para mostrarse al usuario, no reescribirlos. `react-hook-form` + `zod` solo para validar cantidad > 0 y selección de cliente/producto antes de enviar.
+- [ ] `toast.success("Venta registrada")` al confirmar con éxito.
 - [ ] Historial de ventas (`ventas`, `venta(idVenta)`): tabla con cliente, vendedor, fecha, total, líneas expandibles.
 - [ ] En el detalle de venta, dejar reservado (sin implementar) un espacio/columna para el estado de facturación electrónica — ver Fase 2 más abajo.
 
