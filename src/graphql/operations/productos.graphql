@@ -1,0 +1,21 @@
+query Productos($soloActivos: Boolean!) {
+  productos(soloActivos: $soloActivos) {
+    idProducto
+    nombreProducto
+    descripcion
+    precio
+    stock
+    estado
+  }
+}
+
+mutation CrearProducto($datos: ProductoInput!) {
+  crearProducto(datos: $datos) {
+    idProducto
+    nombreProducto
+    descripcion
+    precio
+    stock
+    estado
+  }
+}

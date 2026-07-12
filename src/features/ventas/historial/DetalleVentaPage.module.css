@@ -1,0 +1,64 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 720px;
+}
+
+.back {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.back:hover {
+  color: var(--color-text);
+}
+
+.page h1 {
+  font-size: 20px;
+  margin-bottom: var(--space-2);
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+.summary p {
+  margin-top: 2px;
+  font-size: 14px;
+}
+
+.label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-subtle);
+}
+
+.total {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.facturacionPlaceholder {
+  border-style: dashed;
+}
+
+.placeholderText {
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--color-text-subtle);
+}
+
+.error {
+  color: var(--color-danger);
+}
+
+@media (max-width: 640px) {
+  .summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

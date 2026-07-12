@@ -1,0 +1,25 @@
+query Clientes($soloActivos: Boolean!) {
+  clientes(soloActivos: $soloActivos) {
+    idCliente
+    nombre
+    apellido
+    nombreCompleto
+    correo
+    telefono
+    direccion
+    estado
+  }
+}
+
+mutation CrearCliente($datos: ClienteInput!) {
+  crearCliente(datos: $datos) {
+    idCliente
+    nombre
+    apellido
+    nombreCompleto
+    correo
+    telefono
+    direccion
+    estado
+  }
+}

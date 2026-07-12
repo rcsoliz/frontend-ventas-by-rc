@@ -1,0 +1,13 @@
+@import "./design-system/tokens.css";
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+p {
+  margin: 0;
+}

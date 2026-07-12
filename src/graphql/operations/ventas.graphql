@@ -1,0 +1,65 @@
+query Ventas {
+  ventas {
+    idVenta
+    fechaVenta
+    total
+    cliente {
+      idCliente
+      nombreCompleto
+    }
+    vendedor {
+      idVendedor
+      nombreCompleto
+    }
+  }
+}
+
+query Venta($idVenta: ID!) {
+  venta(idVenta: $idVenta) {
+    idVenta
+    fechaVenta
+    total
+    cliente {
+      idCliente
+      nombreCompleto
+      correo
+      telefono
+    }
+    vendedor {
+      idVendedor
+      nombreCompleto
+    }
+    detalles {
+      idDetalle
+      cantidad
+      precioUnitario
+      subtotal
+      producto {
+        idProducto
+        nombreProducto
+      }
+    }
+  }
+}
+
+mutation RegistrarVenta($datos: VentaInput!) {
+  registrarVenta(datos: $datos) {
+    idVenta
+    fechaVenta
+    total
+    cliente {
+      idCliente
+      nombreCompleto
+    }
+    detalles {
+      idDetalle
+      cantidad
+      precioUnitario
+      subtotal
+      producto {
+        idProducto
+        nombreProducto
+      }
+    }
+  }
+}
