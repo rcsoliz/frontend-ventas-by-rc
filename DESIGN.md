@@ -17,6 +17,11 @@ colors:
   forest-bg: "#edf3ec"
   forest-border: "#cfe3cd"
 typography:
+  page-title:
+    fontFamily: "Helvetica Neue, Segoe UI, -apple-system, system-ui, sans-serif"
+    fontSize: "20px"
+    fontWeight: 600
+    lineHeight: "normal"
   title:
     fontFamily: "Helvetica Neue, Segoe UI, -apple-system, system-ui, sans-serif"
     fontSize: "16px"
@@ -101,7 +106,7 @@ Rechaza explícitamente la estética "ERP de escritorio" anticuada (tablas sin j
 - Monocromático cálido: casi todo resuelto en escala de grises tibios, color solo para estado (peligro/éxito) y para el acento primario (negro puro).
 - Prácticamente sin sombra: la separación entre superficies la da el borde de 1px, no la elevación.
 - Un solo gesto de movimiento: compresión (`scale(0.97)`) al presionar; el resto son transiciones de tono, `140–200ms`, `cubic-bezier(0.23, 1, 0.32, 1)`.
-- Sin escala tipográfica "hero": los títulos más grandes del sistema son 16px/600 — la jerarquía la da el peso y el color, no el tamaño.
+- Sin escala tipográfica "hero": el título de página (`h1` de cada pantalla) es 20px/600, el techo de todo el sistema — la jerarquía la da el peso y el color, no un salto de tamaño mayor.
 - Modo oscuro completo por `prefers-color-scheme`, invirtiendo tinta/papel sin cambiar la estructura.
 
 ## 2. Colors
@@ -137,13 +142,14 @@ Cada rol se invierte manteniendo la misma estructura: papel → `#121110`, super
 **Character:** Una sola familia sans, sin pareja tipográfica ni fuente de display — la jerarquía vive en el peso (400/500/600) y el color, nunca en el tamaño. Es la tipografía de una herramienta de trabajo, no de una portada.
 
 ### Hierarchy
-- **Title** (600, 16px, line-height normal): título de modal, marca "Ventas" en el sidebar. El tamaño más grande de todo el sistema — deliberadamente contenido.
+- **Page Title** (600, 20px, line-height normal): el `h1` de cada pantalla ("Ventas", "Clientes", "Productos", "Nueva venta", detalle de venta) — consistente en las 5 pantallas del sistema. El techo real del sistema.
+- **Title** (600, 16px, line-height normal): título de modal, marca "Ventas" en el sidebar.
 - **Body** (400, 14px, 20px): texto de tabla, inputs, botones tamaño `md`, contenido general.
 - **Label** (500, 13px, 18px): labels de formulario, botones tamaño `sm`, nombre de usuario en el sidebar.
 - **Caption** (500, 12px, uppercase, letter-spacing 0.03em): encabezados de tabla, rol de usuario, hints — el único uso de mayúsculas + tracking del sistema, reservado a metadatos, nunca a contenido de negocio.
 
 ### Named Rules (optional)
-**La Regla del Techo Bajo.** Ningún texto supera los 16px. Si un elemento necesita más peso visual, se le da peso de fuente o color, no tamaño — la jerarquía tipográfica de un dashboard denso no puede permitirse una escala "hero".
+**La Regla del Techo Bajo.** Ningún texto supera los 20px (el `h1` de página). Todo lo demás vive en 16px o menos. Si un elemento necesita más peso visual, se le da peso de fuente o color, no tamaño — la jerarquía tipográfica de un dashboard denso no puede permitirse una escala "hero".
 
 ## 4. Elevation
 
@@ -217,6 +223,6 @@ Plano por defecto: cards, inputs y tabla no llevan sombra perceptible (`shadow-s
 - **Don't** introducir sombras decorativas en cards o filas de tabla en reposo — rompe la Regla de Plano-por-Defecto.
 - **Don't** usar tablas densísimas sin jerarquía, iconos genéricos, ni ningún aspecto "ERP de escritorio anticuado" (anti-referencia directa de PRODUCT.md).
 - **Don't** usar gradientes decorativos, hero-metrics, tarjetas de KPI idénticas ni eyebrows en mayúscula sobre cada sección — cliché "SaaS 2024" explícitamente rechazado en PRODUCT.md.
-- **Don't** subir ningún texto por encima de 16px ni introducir una segunda familia tipográfica de "display" — la Regla del Techo Bajo se rompe con cualquier tamaño hero.
+- **Don't** subir ningún texto por encima de 20px (el `h1` de página) ni introducir una segunda familia tipográfica de "display" — la Regla del Techo Bajo se rompe con cualquier tamaño hero.
 - **Don't** usar `border-left`/`border-right` de color como acento decorativo en cards o alertas.
 - **Don't** dejar el estilo por defecto de una librería (toasts, iconos) sin re-tematizar a esta paleta.

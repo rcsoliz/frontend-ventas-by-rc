@@ -29,18 +29,40 @@ export function CarritoPage() {
   const [idProducto, setIdProducto] = useState("");
   const [cantidad, setCantidad] = useState("1");
   const [errorEnvio, setErrorEnvio] = useState<string | null>(null);
+  const [errorLinea, setErrorLinea] = useState<string | null>(null);
 
   const clientes = clientesData?.clientes ?? [];
   const productos = productosData?.productos ?? [];
+  const productoSeleccionado = productos.find((p) => p.idProducto === idProducto);
 
   function handleAgregarLinea(e: FormEvent) {
     e.preventDefault();
+    setErrorLinea(null);
     const producto = productos.find((p) => p.idProducto === idProducto);
+    if (!producto) return;
     const cantidadNum = Number(cantidad);
-    if (!producto || cantidadNum <= 0) return;
+    if (cantidadNum <= 0) {
+      setErrorLinea("La cantidad debe ser al menos 1.");
+      return;
+    }
+
+    const existente = lineas.find((l) => l.producto.idProducto === producto.idProducto);
+    const cantidadFinal = (existente?.cantidad ?? 0) + cantidadNum;
+
+    if (cantidadFinal > producto.stock) {
+      setErrorLinea(
+        `Stock insuficiente para "${producto.nombreProducto}": disponible ${producto.stock}, solicitado ${cantidadFinal}.`
+      );
+      return;
+    }
+
     agregarLinea(producto, cantidadNum);
     setIdProducto("");
     setCantidad("1");
+
+    if (existente) {
+      showToast(`Cantidad de "${producto.nombreProducto}" actualizada a ${cantidadFinal}.`, "info");
+    }
   }
 
   async function handleConfirmar() {
@@ -110,7 +132,7 @@ export function CarritoPage() {
       </Card>
 
       <Card className={styles.section}>
-        <form onSubmit={handleAgregarLinea} className={styles.lineForm}>
+        <form onSubmit={handleAgregarLinea} className={styles.lineForm} noValidate>
           <Select
             label="Producto"
             value={idProducto}
@@ -129,6 +151,7 @@ export function CarritoPage() {
             type="number"
             min="1"
             step="1"
+            max={productoSeleccionado?.stock}
             value={cantidad}
             onChange={(e) => setCantidad(e.target.value)}
           />
@@ -136,6 +159,11 @@ export function CarritoPage() {
             Agregar
           </Button>
         </form>
+        {errorLinea && (
+          <p role="alert" className={styles.error}>
+            {errorLinea}
+          </p>
+        )}
       </Card>
 
       <Card className={styles.section}>

@@ -64,7 +64,8 @@
       "forest-border": { "role": "success-border", "displayName": "Verde Musgo", "canonical": "#cfe3cd" }
     },
     "typographyMeta": {
-      "title": { "displayName": "Title", "purpose": "Título de modal, marca del sidebar. El tamaño más grande del sistema (16px)." },
+      "page-title": { "displayName": "Page Title", "purpose": "h1 de cada pantalla (Ventas, Clientes, Productos, Nueva venta, Detalle de venta). El tamaño más grande del sistema (20px)." },
+      "title": { "displayName": "Title", "purpose": "Título de modal, marca del sidebar (16px)." },
       "body": { "displayName": "Body", "purpose": "Texto de tabla, inputs, botones md, contenido general." },
       "label": { "displayName": "Label", "purpose": "Labels de formulario, botones sm, metadatos de usuario." }
     },
@@ -162,7 +163,7 @@
     ],
     "rules": [
       { "name": "La Regla del Acento Único", "body": "El negro (#111111) es el único acento no funcional del sistema; peligro y éxito solo comunican estado.", "section": "colors" },
-      { "name": "La Regla del Techo Bajo", "body": "Ningún texto supera los 16px; la jerarquía vive en peso y color, no en tamaño.", "section": "typography" },
+      { "name": "La Regla del Techo Bajo", "body": "Ningún texto supera los 20px (el h1 de página, consistente en las 5 pantallas); todo lo demás vive en 16px o menos. La jerarquía vive en peso y color, no en tamaño.", "section": "typography" },
       { "name": "La Regla de Plano-por-Defecto", "body": "Ninguna superficie en reposo lleva sombra perceptible; la sombra marca únicamente lo que flota sobre la página (modal, toast).", "section": "elevation" }
     ],
     "dos": [
@@ -176,7 +177,7 @@
       "Don't introducir sombras decorativas en cards o filas de tabla en reposo.",
       "Don't usar tablas densísimas sin jerarquía, iconos genéricos, ni aspecto ERP de escritorio anticuado.",
       "Don't usar gradientes decorativos, hero-metrics, tarjetas de KPI idénticas ni eyebrows en mayúscula.",
-      "Don't subir ningún texto por encima de 16px ni introducir una segunda familia tipográfica de display.",
+      "Don't subir ningún texto por encima de 20px (el h1 de página) ni introducir una segunda familia tipográfica de display.",
       "Don't usar border-left/border-right de color como acento decorativo.",
       "Don't dejar el estilo por defecto de una librería sin re-tematizar a esta paleta."
     ]
