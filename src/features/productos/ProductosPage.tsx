@@ -7,6 +7,7 @@ import { SkeletonTable } from "../../components/Skeleton";
 import { Table } from "../../components/Table";
 import type { TableColumn } from "../../components/Table";
 import { Modal } from "../../components/Modal";
+import { Pagination, paginar } from "../../components/Pagination";
 import { useToast } from "../../components/Toast";
 import { useAuth } from "../auth/AuthContext";
 import { esAdministrador } from "../auth/grupos";
@@ -18,18 +19,22 @@ import styles from "./ProductosPage.module.css";
 
 type Producto = ProductosQuery["productos"][number];
 
+const TAMANO_PAGINA = 10;
+
 export function ProductosPage() {
   const { data, loading, error } = useProductos(true);
   const { vendedor } = useAuth();
   const puedeCrearProducto = esAdministrador(vendedor);
   const [modalAbierto, setModalAbierto] = useState(false);
   const [busqueda, setBusqueda] = useState("");
+  const [pagina, setPagina] = useState(1);
   const { showToast } = useToast();
 
   const productos = data?.productos ?? [];
   const productosFiltrados = productos.filter((p) =>
     p.nombreProducto.toLowerCase().includes(busqueda.trim().toLowerCase())
   );
+  const productosPagina = paginar(productosFiltrados, pagina, TAMANO_PAGINA);
 
   const columns: TableColumn<Producto>[] = [
     { key: "nombre", header: "Producto", render: (p) => p.nombreProducto },
@@ -62,7 +67,10 @@ export function ProductosPage() {
           label="Buscar"
           placeholder="Nombre del producto..."
           value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value)}
+          onChange={(e) => {
+            setBusqueda(e.target.value);
+            setPagina(1);
+          }}
         />
       )}
 
@@ -99,8 +107,16 @@ export function ProductosPage() {
             }
           />
         )}
-        {!loading && !error && productosFiltrados.length > 0 && (
-          <Table columns={columns} rows={productosFiltrados} getRowKey={(p) => p.idProducto} />
+        {productosPagina.length > 0 && (
+          <>
+            <Table columns={columns} rows={productosPagina} getRowKey={(p) => p.idProducto} />
+            <Pagination
+              page={pagina}
+              totalItems={productosFiltrados.length}
+              pageSize={TAMANO_PAGINA}
+              onPageChange={setPagina}
+            />
+          </>
         )}
       </Card>
 

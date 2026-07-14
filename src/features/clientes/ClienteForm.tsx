@@ -10,11 +10,12 @@ const CORREO_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 interface ClienteFormProps {
   onSuccess: () => void;
+  onCancel: () => void;
 }
 
 type CampoCliente = "nombre" | "apellido" | "correo" | "telefono" | "direccion";
 
-export function ClienteForm({ onSuccess }: ClienteFormProps) {
+export function ClienteForm({ onSuccess, onCancel }: ClienteFormProps) {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [correo, setCorreo] = useState("");
@@ -24,6 +25,15 @@ export function ClienteForm({ onSuccess }: ClienteFormProps) {
   const [formError, setFormError] = useState<string | null>(null);
 
   const [crearCliente, { loading }] = useCrearCliente();
+
+  function limpiarError(campo: CampoCliente) {
+    setErrores((prev) => {
+      if (!(campo in prev)) return prev;
+      const resto = { ...prev };
+      delete resto[campo];
+      return resto;
+    });
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -60,7 +70,10 @@ export function ClienteForm({ onSuccess }: ClienteFormProps) {
         label="Nombre"
         autoComplete="given-name"
         value={nombre}
-        onChange={(e) => setNombre(e.target.value)}
+        onChange={(e) => {
+          setNombre(e.target.value);
+          limpiarError("nombre");
+        }}
         error={errores.nombre}
         required
       />
@@ -68,7 +81,10 @@ export function ClienteForm({ onSuccess }: ClienteFormProps) {
         label="Apellido"
         autoComplete="family-name"
         value={apellido}
-        onChange={(e) => setApellido(e.target.value)}
+        onChange={(e) => {
+          setApellido(e.target.value);
+          limpiarError("apellido");
+        }}
         error={errores.apellido}
         required
       />
@@ -77,7 +93,10 @@ export function ClienteForm({ onSuccess }: ClienteFormProps) {
         type="email"
         autoComplete="email"
         value={correo}
-        onChange={(e) => setCorreo(e.target.value)}
+        onChange={(e) => {
+          setCorreo(e.target.value);
+          limpiarError("correo");
+        }}
         error={errores.correo}
         required
       />
@@ -85,7 +104,10 @@ export function ClienteForm({ onSuccess }: ClienteFormProps) {
         label="Teléfono"
         autoComplete="tel"
         value={telefono}
-        onChange={(e) => setTelefono(e.target.value)}
+        onChange={(e) => {
+          setTelefono(e.target.value);
+          limpiarError("telefono");
+        }}
         error={errores.telefono}
         required
       />
@@ -93,7 +115,10 @@ export function ClienteForm({ onSuccess }: ClienteFormProps) {
         label="Dirección"
         autoComplete="street-address"
         value={direccion}
-        onChange={(e) => setDireccion(e.target.value)}
+        onChange={(e) => {
+          setDireccion(e.target.value);
+          limpiarError("direccion");
+        }}
         error={errores.direccion}
         required
       />
@@ -102,9 +127,14 @@ export function ClienteForm({ onSuccess }: ClienteFormProps) {
           {formError}
         </p>
       )}
-      <Button type="submit" loading={loading} className={styles.submit}>
-        Crear cliente
-      </Button>
+      <div className={styles.actions}>
+        <Button type="button" variant="ghost" onClick={onCancel}>
+          Cancelar
+        </Button>
+        <Button type="submit" loading={loading} className={styles.submit}>
+          Crear cliente
+        </Button>
+      </div>
     </form>
   );
 }

@@ -24,6 +24,15 @@ export function ProductoForm({ onSuccess, onCancel, nombresExistentes = [] }: Pr
 
   const [crearProducto, { loading }] = useCrearProducto();
 
+  function limpiarError(campo: CampoProducto) {
+    setErrores((prev) => {
+      if (!(campo in prev)) return prev;
+      const resto = { ...prev };
+      delete resto[campo];
+      return resto;
+    });
+  }
+
   const posibleDuplicado =
     nombreProducto.trim().length > 0 &&
     nombresExistentes.some((n) => n.toLowerCase() === nombreProducto.trim().toLowerCase());
@@ -72,7 +81,10 @@ export function ProductoForm({ onSuccess, onCancel, nombresExistentes = [] }: Pr
       <Input
         label="Nombre"
         value={nombreProducto}
-        onChange={(e) => setNombreProducto(e.target.value)}
+        onChange={(e) => {
+          setNombreProducto(e.target.value);
+          limpiarError("nombreProducto");
+        }}
         error={errores.nombreProducto}
         hint={posibleDuplicado ? "Ya existe un producto con este nombre." : undefined}
         required
@@ -80,7 +92,10 @@ export function ProductoForm({ onSuccess, onCancel, nombresExistentes = [] }: Pr
       <Input
         label="Descripción"
         value={descripcion}
-        onChange={(e) => setDescripcion(e.target.value)}
+        onChange={(e) => {
+          setDescripcion(e.target.value);
+          limpiarError("descripcion");
+        }}
         error={errores.descripcion}
         required
       />
@@ -90,7 +105,10 @@ export function ProductoForm({ onSuccess, onCancel, nombresExistentes = [] }: Pr
         min="0.01"
         step="0.01"
         value={precio}
-        onChange={(e) => setPrecio(e.target.value)}
+        onChange={(e) => {
+          setPrecio(e.target.value);
+          limpiarError("precio");
+        }}
         error={errores.precio}
         required
       />
@@ -100,7 +118,10 @@ export function ProductoForm({ onSuccess, onCancel, nombresExistentes = [] }: Pr
         min="0"
         step="1"
         value={stock}
-        onChange={(e) => setStock(e.target.value)}
+        onChange={(e) => {
+          setStock(e.target.value);
+          limpiarError("stock");
+        }}
         error={errores.stock}
         required
       />

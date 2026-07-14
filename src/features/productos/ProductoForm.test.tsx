@@ -26,6 +26,24 @@ describe("ProductoForm", () => {
     expect(onSuccess).not.toHaveBeenCalled();
   });
 
+  it("el mensaje de error de un campo se borra apenas se empieza a corregir, sin esperar a un nuevo submit", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MockedProvider mocks={[]}>
+        <ProductoForm onSuccess={vi.fn()} onCancel={vi.fn()} />
+      </MockedProvider>
+    );
+
+    await user.click(screen.getByRole("button", { name: "Crear producto" }));
+    expect(await screen.findByText("Ingresá el nombre.")).toBeInTheDocument();
+
+    await user.type(screen.getByLabelText("Nombre"), "A");
+
+    expect(screen.queryByText("Ingresá el nombre.")).not.toBeInTheDocument();
+    expect(screen.getByText("Ingresá la descripción.")).toBeInTheDocument();
+  });
+
   it('botón "Cancelar" llama a onCancel sin intentar crear el producto', async () => {
     const user = userEvent.setup();
     const onSuccess = vi.fn();

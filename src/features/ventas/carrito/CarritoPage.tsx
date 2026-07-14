@@ -142,7 +142,10 @@ export function CarritoPage() {
           <Select
             label="Producto"
             value={idProducto}
-            onChange={(e) => setIdProducto(e.target.value)}
+            onChange={(e) => {
+              setIdProducto(e.target.value);
+              setErrorLinea(null);
+            }}
             disabled={productosLoading || productos.length === 0}
           >
             <option value="">
@@ -165,7 +168,10 @@ export function CarritoPage() {
             step="1"
             max={productoSeleccionado?.stock}
             value={cantidad}
-            onChange={(e) => setCantidad(e.target.value)}
+            onChange={(e) => {
+              setCantidad(e.target.value);
+              setErrorLinea(null);
+            }}
           />
           <Button type="submit" variant="secondary" disabled={!idProducto}>
             Agregar

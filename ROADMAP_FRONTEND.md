@@ -49,9 +49,10 @@ Nota de seguridad heredada del backend: `login` devuelve un JWT sin mecanismo de
 
 ### 4. `catalogo-feature`
 
-- [ ] Clientes: listado (`clientes(soloActivos)`), alta (`crearCliente`) — formulario con `react-hook-form` + `zod` (validación de campos requeridos y formato de correo antes de enviar, con errores inline, no el globo nativo del navegador). El error de "correo duplicado" del backend (`ClienteDuplicadoError`) se muestra en el campo correspondiente, no como toast genérico.
-- [ ] Productos: catálogo (`productos(soloActivos)`), alta (`crearProducto`, solo visible/accesible para el grupo `Administradores`, coordinar el gating con `auth-frontend`) — mismo patrón `react-hook-form` + `zod`.
-- [ ] Productos: edición y baja (desactivar) de un producto existente. Hoy el catálogo es solo-alta — no hay forma de corregir un producto cargado ni de retirarlo del catálogo sin tocar la base de datos directamente. Requiere un caso de uso + mutación nuevos en el backend (`actualizarProducto` / equivalente; no existe hoy, solo `crearProducto`) antes de poder implementarse en el frontend. Detectado en la pasada de revisión de diseño de `/impeccable` sobre `ProductosPage` (2026-07-14).
+- [x] Clientes: listado (`clientes(soloActivos)`), alta (`crearCliente`) — formulario con validación inline propia (`noValidate` + mensajes en español por campo, no el globo nativo del navegador). El error de "correo duplicado" del backend (`ClienteDuplicadoError`) se muestra en el campo correspondiente, no como toast genérico.
+- [x] Productos: catálogo (`productos(soloActivos)`), alta (`crearProducto`, solo visible/accesible para el grupo `Administradores`, coordinado con `auth-frontend`) — mismo patrón de validación inline que Clientes.
+- [ ] Clientes: edición y baja (desactivar) de un cliente existente. Hoy el listado es solo-alta — no hay forma de corregir un cliente cargado ni de retirarlo sin tocar la base de datos directamente. Requiere una mutación nueva en el backend (`actualizarCliente`/`cambiarEstadoCliente` o equivalente; no existe hoy, solo `crearCliente`) — ver `BackEnd/ROADMAP.md`, Fase 3. Bloqueado en el backend, no en el frontend.
+- [ ] Productos: edición y baja (desactivar) de un producto existente. Hoy el catálogo es solo-alta — no hay forma de corregir un producto cargado ni de retirarlo del catálogo sin tocar la base de datos directamente. Requiere un caso de uso + mutación nuevos en el backend (`actualizarProducto`/`cambiarEstadoProducto` o equivalente; no existe hoy, solo `crearProducto`) — ver `BackEnd/ROADMAP.md`, Fase 3. Detectado en la pasada de revisión de diseño de `/impeccable` sobre `ProductosPage` (2026-07-14). Bloqueado en el backend, no en el frontend.
 - [ ] `sonner`: `toast.success(...)` al crear cliente/producto exitosamente; `toast.error(mensaje)` para errores que no sean de un campo específico (ej. error de red).
 - [ ] Ambas pantallas consumen los hooks tipados generados por `graphql-client` — no escribir queries GraphQL sueltas dentro de los componentes.
 
@@ -69,6 +70,21 @@ Nota de seguridad heredada del backend: `login` devuelve un JWT sin mecanismo de
 - [ ] Vitest + React Testing Library: componentes de `catalogo-feature`/`ventas-feature` (validación de formularios, estados de error, gating por grupo).
 - [ ] Al menos un test de integración con Apollo `MockedProvider` para `registrarVenta` (éxito y stock insuficiente).
 - [ ] E2E (Playwright, opcional pero recomendado): login → crear cliente → crear producto → registrar venta con 2 líneas → verlo en el historial.
+
+---
+
+## Fase 3 — Pulido de formularios, paginación y búsqueda (completado 2026-07-14)
+
+Salió de una pasada de feedback directo del usuario tras el pase de revisión `/impeccable` (que cubrió las 5 pantallas y sus P1/P2/P3). Todo lo de esta fase quedó implementado y verificado (suite de tests + `tsc -b` + auditoría responsive con Playwright real a 375/768/1280px, sin overflow horizontal en ninguna pantalla).
+
+### `catalogo-feature` / `ventas-feature`
+
+- [x] Botón "Cancelar" en el modal de alta de Cliente (ya existía en Producto, faltaba en Cliente).
+- [x] Los mensajes de error de campo (Cliente, Producto) se borran apenas el usuario empieza a corregir el campo — antes quedaban pegados hasta el siguiente submit.
+- [x] Confirmado con un test de integración (`ClientesPage.test.tsx`) que el toast de éxito "Cliente creado correctamente." sí se dispara al crear un cliente — el código ya lo tenía, pero no había cobertura de test que lo probara end-to-end.
+- [x] Búsqueda por nombre en Clientes (mismo patrón cliente-side ya usado en Productos e Historial).
+- [x] Paginación (`src/components/Pagination.tsx`, 10 filas por página) en Clientes, Productos e Historial de ventas — hoy es 100% client-side sobre la lista ya traída por la query (`clientes`/`productos`/`ventas` no aceptan `limit`/`offset` todavía). Si el volumen de datos crece mucho, considerar paginación real del lado del backend (ver nota en `BackEnd/ROADMAP.md`).
+- [x] Auditoría responsive real (Playwright, no solo lectura de CSS) de las 5 pantallas + modal + drawer de navegación mobile a 375/768/1280px — sin hallazgos, el trabajo de `AppLayout`/`Table` de pasadas anteriores ya lo dejaba bien resuelto.
 
 ---
 

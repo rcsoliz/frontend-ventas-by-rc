@@ -32,7 +32,7 @@ describe("ClienteForm", () => {
 
     render(
       <MockedProvider mocks={mocks}>
-        <ClienteForm onSuccess={onSuccess} />
+        <ClienteForm onSuccess={onSuccess} onCancel={vi.fn()} />
       </MockedProvider>
     );
 
@@ -56,7 +56,7 @@ describe("ClienteForm", () => {
 
     const { container } = render(
       <MockedProvider mocks={[]}>
-        <ClienteForm onSuccess={onSuccess} />
+        <ClienteForm onSuccess={onSuccess} onCancel={vi.fn()} />
       </MockedProvider>
     );
 
@@ -69,6 +69,41 @@ describe("ClienteForm", () => {
     expect(screen.getByText("Ingresá un correo con formato válido.")).toBeInTheDocument();
     expect(screen.getByText("Ingresá el teléfono.")).toBeInTheDocument();
     expect(screen.getByText("Ingresá la dirección.")).toBeInTheDocument();
+    expect(onSuccess).not.toHaveBeenCalled();
+  });
+
+  it("el mensaje de error de un campo se borra apenas se empieza a corregir, sin esperar a un nuevo submit", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MockedProvider mocks={[]}>
+        <ClienteForm onSuccess={vi.fn()} onCancel={vi.fn()} />
+      </MockedProvider>
+    );
+
+    await user.click(screen.getByRole("button", { name: "Crear cliente" }));
+    expect(await screen.findByText("Ingresá el nombre.")).toBeInTheDocument();
+
+    await user.type(screen.getByLabelText("Nombre"), "A");
+
+    expect(screen.queryByText("Ingresá el nombre.")).not.toBeInTheDocument();
+    expect(screen.getByText("Ingresá el apellido.")).toBeInTheDocument();
+  });
+
+  it('botón "Cancelar" llama a onCancel sin intentar crear el cliente', async () => {
+    const user = userEvent.setup();
+    const onSuccess = vi.fn();
+    const onCancel = vi.fn();
+
+    render(
+      <MockedProvider mocks={[]}>
+        <ClienteForm onSuccess={onSuccess} onCancel={onCancel} />
+      </MockedProvider>
+    );
+
+    await user.click(screen.getByRole("button", { name: "Cancelar" }));
+
+    expect(onCancel).toHaveBeenCalledTimes(1);
     expect(onSuccess).not.toHaveBeenCalled();
   });
 });

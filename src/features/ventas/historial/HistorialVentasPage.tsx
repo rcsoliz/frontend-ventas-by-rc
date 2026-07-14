@@ -8,6 +8,7 @@ import { Select } from "../../../components/Select";
 import { SkeletonTable } from "../../../components/Skeleton";
 import { Table } from "../../../components/Table";
 import type { TableColumn } from "../../../components/Table";
+import { Pagination, paginar } from "../../../components/Pagination";
 import { useAuth } from "../../auth/AuthContext";
 import { useVentas } from "../hooks";
 import type { VentasQuery } from "../../../graphql/generated/graphql";
@@ -15,6 +16,8 @@ import { extraerMensajeError } from "../../../graphql/errors";
 import styles from "./HistorialVentasPage.module.css";
 
 type Venta = VentasQuery["ventas"][number];
+
+const TAMANO_PAGINA = 10;
 
 export function HistorialVentasPage() {
   const navigate = useNavigate();
@@ -24,6 +27,7 @@ export function HistorialVentasPage() {
 
   const [busqueda, setBusqueda] = useState("");
   const [alcance, setAlcance] = useState<"todas" | "mias">("todas");
+  const [pagina, setPagina] = useState(1);
 
   const ventasFiltradas = ventas.filter((v) => {
     if (alcance === "mias" && v.vendedor.idVendedor !== vendedor?.id) return false;
@@ -34,6 +38,7 @@ export function HistorialVentasPage() {
       v.vendedor.nombreCompleto.toLowerCase().includes(termino)
     );
   });
+  const ventasPagina = paginar(ventasFiltradas, pagina, TAMANO_PAGINA);
 
   const columns: TableColumn<Venta>[] = [
     { key: "fecha", header: "Fecha", render: (v) => formatearFecha(v.fechaVenta) },
@@ -45,6 +50,7 @@ export function HistorialVentasPage() {
   function limpiarFiltros() {
     setBusqueda("");
     setAlcance("todas");
+    setPagina(1);
   }
 
   return (
@@ -60,12 +66,18 @@ export function HistorialVentasPage() {
             label="Buscar"
             placeholder="Cliente o vendedor..."
             value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
+            onChange={(e) => {
+              setBusqueda(e.target.value);
+              setPagina(1);
+            }}
           />
           <Select
             label="Alcance"
             value={alcance}
-            onChange={(e) => setAlcance(e.target.value as "todas" | "mias")}
+            onChange={(e) => {
+              setAlcance(e.target.value as "todas" | "mias");
+              setPagina(1);
+            }}
           >
             <option value="todas">Todas las ventas</option>
             <option value="mias">Solo mis ventas</option>
@@ -103,13 +115,21 @@ export function HistorialVentasPage() {
             }
           />
         )}
-        {!loading && !error && ventasFiltradas.length > 0 && (
-          <Table
-            columns={columns}
-            rows={ventasFiltradas}
-            getRowKey={(v) => v.idVenta}
-            onRowClick={(v) => navigate(`/ventas/${v.idVenta}`)}
-          />
+        {ventasPagina.length > 0 && (
+          <>
+            <Table
+              columns={columns}
+              rows={ventasPagina}
+              getRowKey={(v) => v.idVenta}
+              onRowClick={(v) => navigate(`/ventas/${v.idVenta}`)}
+            />
+            <Pagination
+              page={pagina}
+              totalItems={ventasFiltradas.length}
+              pageSize={TAMANO_PAGINA}
+              onPageChange={setPagina}
+            />
+          </>
         )}
       </Card>
     </div>
