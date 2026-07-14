@@ -23,3 +23,29 @@ mutation CrearCliente($datos: ClienteInput!) {
     estado
   }
 }
+
+mutation ActualizarCliente($idCliente: ID!, $datos: ClienteInput!) {
+  actualizarCliente(idCliente: $idCliente, datos: $datos) {
+    idCliente
+    nombre
+    apellido
+    nombreCompleto
+    correo
+    telefono
+    direccion
+    estado
+  }
+}
+
+mutation CambiarEstadoCliente($idCliente: ID!, $estado: Boolean!) {
+  cambiarEstadoCliente(idCliente: $idCliente, estado: $estado) {
+    idCliente
+    nombre
+    apellido
+    nombreCompleto
+    correo
+    telefono
+    direccion
+    estado
+  }
+}

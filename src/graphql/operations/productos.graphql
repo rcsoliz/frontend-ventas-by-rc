@@ -19,3 +19,25 @@ mutation CrearProducto($datos: ProductoInput!) {
     estado
   }
 }
+
+mutation ActualizarProducto($idProducto: ID!, $datos: ProductoInput!) {
+  actualizarProducto(idProducto: $idProducto, datos: $datos) {
+    idProducto
+    nombreProducto
+    descripcion
+    precio
+    stock
+    estado
+  }
+}
+
+mutation CambiarEstadoProducto($idProducto: ID!, $estado: Boolean!) {
+  cambiarEstadoProducto(idProducto: $idProducto, estado: $estado) {
+    idProducto
+    nombreProducto
+    descripcion
+    precio
+    stock
+    estado
+  }
+}

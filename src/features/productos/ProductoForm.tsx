@@ -2,11 +2,20 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
-import { useCrearProducto } from "./hooks";
+import { useActualizarProducto, useCrearProducto } from "./hooks";
 import { extraerMensajeError } from "../../graphql/errors";
 import styles from "./ProductoForm.module.css";
 
+export interface ProductoEditable {
+  idProducto: string;
+  nombreProducto: string;
+  descripcion: string;
+  precio: string;
+  stock: number;
+}
+
 interface ProductoFormProps {
+  producto?: ProductoEditable;
   onSuccess: () => void;
   onCancel: () => void;
   nombresExistentes?: string[];
@@ -14,15 +23,22 @@ interface ProductoFormProps {
 
 type CampoProducto = "nombreProducto" | "descripcion" | "precio" | "stock";
 
-export function ProductoForm({ onSuccess, onCancel, nombresExistentes = [] }: ProductoFormProps) {
-  const [nombreProducto, setNombreProducto] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [precio, setPrecio] = useState("");
-  const [stock, setStock] = useState("");
+export function ProductoForm({
+  producto,
+  onSuccess,
+  onCancel,
+  nombresExistentes = [],
+}: ProductoFormProps) {
+  const [nombreProducto, setNombreProducto] = useState(producto?.nombreProducto ?? "");
+  const [descripcion, setDescripcion] = useState(producto?.descripcion ?? "");
+  const [precio, setPrecio] = useState(producto?.precio ?? "");
+  const [stock, setStock] = useState(producto ? String(producto.stock) : "");
   const [errores, setErrores] = useState<Partial<Record<CampoProducto, string>>>({});
   const [formError, setFormError] = useState<string | null>(null);
 
-  const [crearProducto, { loading }] = useCrearProducto();
+  const [crearProducto, { loading: creando }] = useCrearProducto();
+  const [actualizarProducto, { loading: actualizando }] = useActualizarProducto();
+  const loading = creando || actualizando;
 
   function limpiarError(campo: CampoProducto) {
     setErrores((prev) => {
@@ -51,16 +67,30 @@ export function ProductoForm({ onSuccess, onCancel, nombresExistentes = [] }: Pr
     if (Object.keys(nuevosErrores).length > 0) return;
 
     try {
-      await crearProducto({
-        variables: {
-          datos: {
-            nombreProducto,
-            descripcion,
-            precio: Number(precio),
-            stock: Number(stock),
+      if (producto) {
+        await actualizarProducto({
+          variables: {
+            idProducto: producto.idProducto,
+            datos: {
+              nombreProducto,
+              descripcion,
+              precio: Number(precio),
+              stock: Number(stock),
+            },
           },
-        },
-      });
+        });
+      } else {
+        await crearProducto({
+          variables: {
+            datos: {
+              nombreProducto,
+              descripcion,
+              precio: Number(precio),
+              stock: Number(stock),
+            },
+          },
+        });
+      }
       onSuccess();
     } catch (error) {
       const mensaje = extraerMensajeError(error);
@@ -113,7 +143,7 @@ export function ProductoForm({ onSuccess, onCancel, nombresExistentes = [] }: Pr
         required
       />
       <Input
-        label="Stock inicial"
+        label={producto ? "Stock" : "Stock inicial"}
         type="number"
         min="0"
         step="1"
@@ -135,7 +165,7 @@ export function ProductoForm({ onSuccess, onCancel, nombresExistentes = [] }: Pr
           Cancelar
         </Button>
         <Button type="submit" loading={loading} className={styles.submit}>
-          Crear producto
+          {producto ? "Guardar cambios" : "Crear producto"}
         </Button>
       </div>
     </form>

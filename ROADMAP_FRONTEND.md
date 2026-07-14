@@ -51,8 +51,8 @@ Nota de seguridad heredada del backend: `login` devuelve un JWT sin mecanismo de
 
 - [x] Clientes: listado (`clientes(soloActivos)`), alta (`crearCliente`) — formulario con validación inline propia (`noValidate` + mensajes en español por campo, no el globo nativo del navegador). El error de "correo duplicado" del backend (`ClienteDuplicadoError`) se muestra en el campo correspondiente, no como toast genérico.
 - [x] Productos: catálogo (`productos(soloActivos)`), alta (`crearProducto`, solo visible/accesible para el grupo `Administradores`, coordinado con `auth-frontend`) — mismo patrón de validación inline que Clientes.
-- [ ] Clientes: edición y baja (desactivar) de un cliente existente. Hoy el listado es solo-alta — no hay forma de corregir un cliente cargado ni de retirarlo sin tocar la base de datos directamente. Requiere una mutación nueva en el backend (`actualizarCliente`/`cambiarEstadoCliente` o equivalente; no existe hoy, solo `crearCliente`) — ver `BackEnd/ROADMAP.md`, Fase 3. Bloqueado en el backend, no en el frontend.
-- [ ] Productos: edición y baja (desactivar) de un producto existente. Hoy el catálogo es solo-alta — no hay forma de corregir un producto cargado ni de retirarlo del catálogo sin tocar la base de datos directamente. Requiere un caso de uso + mutación nuevos en el backend (`actualizarProducto`/`cambiarEstadoProducto` o equivalente; no existe hoy, solo `crearProducto`) — ver `BackEnd/ROADMAP.md`, Fase 3. Detectado en la pasada de revisión de diseño de `/impeccable` sobre `ProductosPage` (2026-07-14). Bloqueado en el backend, no en el frontend.
+- [x] Clientes: edición y baja lógica (desactivar/activar) de un cliente existente — `ClienteForm` ahora soporta modo edición (prop `cliente` opcional, prefill + `actualizarCliente` en vez de `crearCliente`), columna "Acciones" en la tabla (Editar/Desactivar-Activar, gateada a `Administradores` igual que el permiso `ventas.change_cliente` del backend), columna "Estado" con badge cuando el filtro "Mostrar" está en "Todos (incluye inactivos)".
+- [x] Productos: edición y baja lógica de un producto existente — mismo patrón que Clientes (`ProductoForm` con prop `producto` opcional, `actualizarProducto`/`cambiarEstadoProducto`, gateado a `Administradores`). Detectado en la pasada de revisión de diseño de `/impeccable` sobre `ProductosPage` (2026-07-14), implementado junto con la Fase 3 del backend el mismo día.
 - [ ] `sonner`: `toast.success(...)` al crear cliente/producto exitosamente; `toast.error(mensaje)` para errores que no sean de un campo específico (ej. error de red).
 - [ ] Ambas pantallas consumen los hooks tipados generados por `graphql-client` — no escribir queries GraphQL sueltas dentro de los componentes.
 
@@ -85,6 +85,20 @@ Salió de una pasada de feedback directo del usuario tras el pase de revisión `
 - [x] Búsqueda por nombre en Clientes (mismo patrón cliente-side ya usado en Productos e Historial).
 - [x] Paginación (`src/components/Pagination.tsx`, 10 filas por página) en Clientes, Productos e Historial de ventas — hoy es 100% client-side sobre la lista ya traída por la query (`clientes`/`productos`/`ventas` no aceptan `limit`/`offset` todavía). Si el volumen de datos crece mucho, considerar paginación real del lado del backend (ver nota en `BackEnd/ROADMAP.md`).
 - [x] Auditoría responsive real (Playwright, no solo lectura de CSS) de las 5 pantallas + modal + drawer de navegación mobile a 375/768/1280px — sin hallazgos, el trabajo de `AppLayout`/`Table` de pasadas anteriores ya lo dejaba bien resuelto.
+
+---
+
+## Fase 4 — Edición y baja lógica de Cliente y Producto (completado 2026-07-14)
+
+Contraparte de UI de `BackEnd/ROADMAP.md` Fase 3 (mismo día): una vez que `actualizarCliente`, `cambiarEstadoCliente`, `actualizarProducto` y `cambiarEstadoProducto` existieron en el backend, se corrió `npm run codegen` para generar los hooks tipados y se conectó todo el flujo de UI.
+
+### `catalogo-feature`
+
+- [x] `ClienteForm`/`ProductoForm` ahora aceptan una prop opcional (`cliente`/`producto`) que, si viene, precarga el formulario y usa `actualizarCliente`/`actualizarProducto` en vez de `crearCliente`/`crearProducto` — mismo componente para alta y edición, sin duplicar el formulario. El botón cambia a "Guardar cambios" en modo edición.
+- [x] Columna "Acciones" nueva en la tabla de Clientes y Productos: "Editar" (abre el modal en modo edición) y "Activar"/"Desactivar" (llama `cambiarEstadoCliente`/`cambiarEstadoProducto` directo desde la fila, con toast de confirmación). Ambos botones usan `e.stopPropagation()` porque viven dentro de una celda de tabla.
+- [x] La columna de Acciones (y el botón "Nuevo cliente"/"Nuevo producto" en Productos) está gateada a `esAdministrador(vendedor)` — coincide exactamente con que `ventas.change_cliente`/`ventas.change_producto` son permisos solo de `Administradores` en `BackEnd/ARCHITECTURE.md`. Un Vendedor puede crear clientes (tiene `add_cliente`) pero no ve Editar/Desactivar en ninguna fila.
+- [x] Filtro "Mostrar" (Solo activos / Todos, incluye inactivos) en ambas pantallas — antes las queries siempre pedían `soloActivos: true` y no había forma de ver ni reactivar un registro dado de baja. Cuando el filtro está en "Todos", aparece una columna "Estado" con un badge nuevo (`src/components/Badge.tsx`, variantes `success`/`muted`) mostrando Activo/Inactivo.
+- [x] Verificado con tests de integración (`ClientesPage.test.tsx`, `ProductosPage.test.tsx`: gating por grupo en las acciones de fila, editar y ver el nuevo nombre reflejado, desactivar y confirmar que desaparece del listado de activos) y con una pasada manual en el navegador real (Playwright, no solo tests) contra el backend corriendo: crear → editar → desactivar → ver en "Todos" con badge Inactivo → reactivar, para Cliente y Producto.
 
 ---
 

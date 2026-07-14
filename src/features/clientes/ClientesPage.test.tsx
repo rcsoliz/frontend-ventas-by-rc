@@ -1,10 +1,42 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MockedProvider } from "@apollo/client/testing/react";
+import { AuthProvider } from "../auth/AuthContext";
 import { ToastProvider } from "../../components/Toast";
-import { ClientesDocument, CrearClienteDocument } from "../../graphql/generated/graphql";
+import {
+  ActualizarClienteDocument,
+  CambiarEstadoClienteDocument,
+  ClientesDocument,
+  CrearClienteDocument,
+} from "../../graphql/generated/graphql";
 import { ClientesPage } from "./ClientesPage";
+
+function seedVendedor(grupos: string[]) {
+  localStorage.setItem("ventas_token", "fake-token");
+  localStorage.setItem(
+    "ventas_vendedor",
+    JSON.stringify({
+      id: "1",
+      username: "u",
+      nombreCompleto: "Test",
+      email: "t@test.com",
+      grupos,
+    })
+  );
+}
+
+function renderClientesPage(mocks: unknown[]) {
+  return render(
+    <MockedProvider mocks={mocks as never}>
+      <AuthProvider>
+        <ToastProvider>
+          <ClientesPage />
+        </ToastProvider>
+      </AuthProvider>
+    </MockedProvider>
+  );
+}
 
 const clientesVaciosMock = {
   request: { query: ClientesDocument, variables: { soloActivos: true } },
@@ -47,17 +79,25 @@ const crearClienteMock = {
   },
 };
 
+const brunoActivo = {
+  idCliente: "5",
+  nombre: "Bruno",
+  apellido: "Diaz",
+  nombreCompleto: "Bruno Diaz",
+  correo: "bruno@test.com",
+  telefono: "111",
+  direccion: "Av. Central",
+  estado: true,
+};
+
 describe("ClientesPage", () => {
+  beforeEach(() => localStorage.clear());
+
   it("crear un cliente exitosamente muestra el toast de éxito y cierra el modal", async () => {
+    seedVendedor(["Vendedores"]);
     const user = userEvent.setup();
 
-    render(
-      <MockedProvider mocks={[clientesVaciosMock, crearClienteMock, clientesVaciosMockRefetch]}>
-        <ToastProvider>
-          <ClientesPage />
-        </ToastProvider>
-      </MockedProvider>
-    );
+    renderClientesPage([clientesVaciosMock, crearClienteMock, clientesVaciosMockRefetch]);
 
     await user.click(await screen.findByRole("button", { name: "Nuevo cliente" }));
 
@@ -70,5 +110,96 @@ describe("ClientesPage", () => {
 
     expect(await screen.findByText("Cliente creado correctamente.")).toBeInTheDocument();
     expect(screen.queryByLabelText("Correo")).not.toBeInTheDocument();
+  });
+
+  it('un usuario del grupo "Vendedores" no ve las acciones de Editar/Desactivar', async () => {
+    seedVendedor(["Vendedores"]);
+
+    renderClientesPage([
+      { request: { query: ClientesDocument, variables: { soloActivos: true } }, result: { data: { clientes: [brunoActivo] } } },
+    ]);
+
+    expect(await screen.findByText("Bruno Diaz")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Editar" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Desactivar" })).not.toBeInTheDocument();
+  });
+
+  it('un Administrador puede editar un cliente desde la tabla y ve el toast de actualización', async () => {
+    seedVendedor(["Administradores"]);
+    const user = userEvent.setup();
+
+    const clientesInicial = {
+      request: { query: ClientesDocument, variables: { soloActivos: true } },
+      result: { data: { clientes: [brunoActivo] } },
+    };
+    const actualizarMock = {
+      request: {
+        query: ActualizarClienteDocument,
+        variables: {
+          idCliente: "5",
+          datos: {
+            nombre: "Bruno",
+            apellido: "Díaz López",
+            correo: "bruno@test.com",
+            telefono: "111",
+            direccion: "Av. Central",
+          },
+        },
+      },
+      result: {
+        data: {
+          actualizarCliente: {
+            ...brunoActivo,
+            apellido: "Díaz López",
+            nombreCompleto: "Bruno Díaz López",
+          },
+        },
+      },
+    };
+    const clientesRefetch = {
+      request: { query: ClientesDocument, variables: { soloActivos: true } },
+      result: { data: { clientes: [{ ...brunoActivo, apellido: "Díaz López", nombreCompleto: "Bruno Díaz López" }] } },
+    };
+
+    renderClientesPage([clientesInicial, actualizarMock, clientesRefetch]);
+
+    await user.click(await screen.findByRole("button", { name: "Editar" }));
+
+    const campoApellido = await screen.findByLabelText("Apellido");
+    expect(campoApellido).toHaveValue("Diaz");
+    await user.clear(campoApellido);
+    await user.type(campoApellido, "Díaz López");
+    await user.click(screen.getByRole("button", { name: "Guardar cambios" }));
+
+    expect(await screen.findByText("Cliente actualizado correctamente.")).toBeInTheDocument();
+    expect(await screen.findByText("Bruno Díaz López")).toBeInTheDocument();
+  });
+
+  it('un Administrador puede desactivar un cliente y desaparece del listado de activos', async () => {
+    seedVendedor(["Administradores"]);
+    const user = userEvent.setup();
+
+    const clientesInicial = {
+      request: { query: ClientesDocument, variables: { soloActivos: true } },
+      result: { data: { clientes: [brunoActivo] } },
+    };
+    const cambiarEstadoMock = {
+      request: {
+        query: CambiarEstadoClienteDocument,
+        variables: { idCliente: "5", estado: false },
+      },
+      result: { data: { cambiarEstadoCliente: { ...brunoActivo, estado: false } } },
+    };
+    const clientesRefetchVacio = {
+      request: { query: ClientesDocument, variables: { soloActivos: true } },
+      result: { data: { clientes: [] } },
+    };
+
+    renderClientesPage([clientesInicial, cambiarEstadoMock, clientesRefetchVacio]);
+
+    await user.click(await screen.findByRole("button", { name: "Desactivar" }));
+
+    expect(await screen.findByText('"Bruno Diaz" fue desactivado.')).toBeInTheDocument();
+    expect(await screen.findByText("Todavía no registraste clientes")).toBeInTheDocument();
   });
 });

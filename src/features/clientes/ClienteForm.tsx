@@ -2,29 +2,41 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
-import { useCrearCliente } from "./hooks";
+import { useActualizarCliente, useCrearCliente } from "./hooks";
 import { extraerMensajeError } from "../../graphql/errors";
 import styles from "./ClienteForm.module.css";
 
 const CORREO_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+export interface ClienteEditable {
+  idCliente: string;
+  nombre: string;
+  apellido: string;
+  correo: string;
+  telefono: string;
+  direccion: string;
+}
+
 interface ClienteFormProps {
+  cliente?: ClienteEditable;
   onSuccess: () => void;
   onCancel: () => void;
 }
 
 type CampoCliente = "nombre" | "apellido" | "correo" | "telefono" | "direccion";
 
-export function ClienteForm({ onSuccess, onCancel }: ClienteFormProps) {
-  const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
-  const [correo, setCorreo] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [direccion, setDireccion] = useState("");
+export function ClienteForm({ cliente, onSuccess, onCancel }: ClienteFormProps) {
+  const [nombre, setNombre] = useState(cliente?.nombre ?? "");
+  const [apellido, setApellido] = useState(cliente?.apellido ?? "");
+  const [correo, setCorreo] = useState(cliente?.correo ?? "");
+  const [telefono, setTelefono] = useState(cliente?.telefono ?? "");
+  const [direccion, setDireccion] = useState(cliente?.direccion ?? "");
   const [errores, setErrores] = useState<Partial<Record<CampoCliente, string>>>({});
   const [formError, setFormError] = useState<string | null>(null);
 
-  const [crearCliente, { loading }] = useCrearCliente();
+  const [crearCliente, { loading: creando }] = useCrearCliente();
+  const [actualizarCliente, { loading: actualizando }] = useActualizarCliente();
+  const loading = creando || actualizando;
 
   function limpiarError(campo: CampoCliente) {
     setErrores((prev) => {
@@ -50,9 +62,18 @@ export function ClienteForm({ onSuccess, onCancel }: ClienteFormProps) {
     if (Object.keys(nuevosErrores).length > 0) return;
 
     try {
-      await crearCliente({
-        variables: { datos: { nombre, apellido, correo, telefono, direccion } },
-      });
+      if (cliente) {
+        await actualizarCliente({
+          variables: {
+            idCliente: cliente.idCliente,
+            datos: { nombre, apellido, correo, telefono, direccion },
+          },
+        });
+      } else {
+        await crearCliente({
+          variables: { datos: { nombre, apellido, correo, telefono, direccion } },
+        });
+      }
       onSuccess();
     } catch (error) {
       const mensaje = extraerMensajeError(error);
@@ -132,7 +153,7 @@ export function ClienteForm({ onSuccess, onCancel }: ClienteFormProps) {
           Cancelar
         </Button>
         <Button type="submit" loading={loading} className={styles.submit}>
-          Crear cliente
+          {cliente ? "Guardar cambios" : "Crear cliente"}
         </Button>
       </div>
     </form>

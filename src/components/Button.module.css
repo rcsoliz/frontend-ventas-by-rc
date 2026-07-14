@@ -63,6 +63,15 @@
   filter: brightness(0.92);
 }
 
+.success {
+  background: var(--color-success);
+  color: white;
+}
+
+.success:hover:not(:disabled) {
+  filter: brightness(0.92);
+}
+
 .ghost {
   background: transparent;
   color: var(--color-text-muted);
