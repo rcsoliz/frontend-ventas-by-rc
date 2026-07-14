@@ -38,7 +38,12 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
       }
     }
     document.addEventListener("keydown", onKeyDown);
-    dialogRef.current?.focus();
+    // Prioriza el primer campo del formulario (ahorra un clic); si el modal
+    // no tiene ninguno, cae al contenedor del diálogo como antes.
+    const primerCampo = dialogRef.current?.querySelector<HTMLElement>(
+      'input:not([disabled]), textarea:not([disabled]), select:not([disabled])'
+    );
+    (primerCampo ?? dialogRef.current)?.focus();
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open, onClose]);
 

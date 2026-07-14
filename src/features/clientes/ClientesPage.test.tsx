@@ -197,9 +197,29 @@ describe("ClientesPage", () => {
 
     renderClientesPage([clientesInicial, cambiarEstadoMock, clientesRefetchVacio]);
 
-    await user.click(await screen.findByRole("button", { name: "Desactivar" }));
+    const botonDesactivar = await screen.findByRole("button", { name: "Desactivar" });
+    await user.click(botonDesactivar);
+    expect(await screen.findByRole("button", { name: "¿Confirmar?" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "¿Confirmar?" }));
 
     expect(await screen.findByText('"Bruno Diaz" fue desactivado.')).toBeInTheDocument();
     expect(await screen.findByText("Todavía no registraste clientes")).toBeInTheDocument();
+  });
+
+  it('el primer clic en "Desactivar" solo arma la confirmación, no ejecuta la mutación', async () => {
+    seedVendedor(["Administradores"]);
+    const user = userEvent.setup();
+
+    const clientesInicial = {
+      request: { query: ClientesDocument, variables: { soloActivos: true } },
+      result: { data: { clientes: [brunoActivo] } },
+    };
+
+    renderClientesPage([clientesInicial]);
+
+    await user.click(await screen.findByRole("button", { name: "Desactivar" }));
+
+    expect(await screen.findByRole("button", { name: "¿Confirmar?" })).toBeInTheDocument();
+    expect(screen.queryByText(/fue desactivado/)).not.toBeInTheDocument();
   });
 });

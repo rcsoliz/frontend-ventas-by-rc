@@ -15,6 +15,7 @@ import { useRegistrarVenta } from "../hooks";
 import { useCarrito } from "./useCarrito";
 import type { LineaCarrito } from "./useCarrito";
 import { extraerMensajeError } from "../../../graphql/errors";
+import { formatearMoneda } from "../../../format";
 import styles from "./CarritoPage.module.css";
 
 export function CarritoPage() {
@@ -96,7 +97,7 @@ export function CarritoPage() {
       key: "subtotal",
       header: "Subtotal",
       align: "right",
-      render: (l) => `Bs ${(Number(l.producto.precio) * l.cantidad).toFixed(2)}`,
+      render: (l) => formatearMoneda(Number(l.producto.precio) * l.cantidad),
     },
     {
       key: "acciones",
@@ -193,7 +194,7 @@ export function CarritoPage() {
         ) : (
           <>
             <Table columns={columns} rows={lineas} getRowKey={(l) => l.producto.idProducto} />
-            <div className={styles.total}>Total: Bs {total.toFixed(2)}</div>
+            <div className={styles.total}>Total: {formatearMoneda(total)}</div>
           </>
         )}
       </Card>

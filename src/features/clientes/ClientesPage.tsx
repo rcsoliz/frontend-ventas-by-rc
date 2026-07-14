@@ -11,6 +11,8 @@ import type { TableColumn } from "../../components/Table";
 import { Modal } from "../../components/Modal";
 import { Pagination, paginar } from "../../components/Pagination";
 import { useToast } from "../../components/Toast";
+import { useConfirmacionInline } from "../../hooks/useConfirmacionInline";
+import { useOrdenamiento, ordenarPor } from "../../hooks/useOrdenamiento";
 import { useAuth } from "../auth/AuthContext";
 import { esAdministrador } from "../auth/grupos";
 import { useCambiarEstadoCliente, useClientes } from "./hooks";
@@ -23,6 +25,21 @@ type Cliente = ClientesQuery["clientes"][number];
 
 const TAMANO_PAGINA = 10;
 
+function obtenerValorCliente(c: Cliente, key: string): string {
+  switch (key) {
+    case "nombre":
+      return c.nombreCompleto;
+    case "correo":
+      return c.correo;
+    case "telefono":
+      return c.telefono;
+    case "direccion":
+      return c.direccion;
+    default:
+      return "";
+  }
+}
+
 export function ClientesPage() {
   const [alcance, setAlcance] = useState<"activos" | "todos">("activos");
   const { data, loading, error } = useClientes(alcance === "activos");
@@ -34,12 +51,15 @@ export function ClientesPage() {
   const [pagina, setPagina] = useState(1);
   const { showToast } = useToast();
   const [cambiarEstadoCliente] = useCambiarEstadoCliente();
+  const { idConfirmando, solicitar } = useConfirmacionInline();
+  const { sortKey, sortDirection, alternarOrden } = useOrdenamiento();
 
   const clientes = data?.clientes ?? [];
   const clientesFiltrados = clientes.filter((c) =>
     c.nombreCompleto.toLowerCase().includes(busqueda.trim().toLowerCase())
   );
-  const clientesPagina = paginar(clientesFiltrados, pagina, TAMANO_PAGINA);
+  const clientesOrdenados = ordenarPor(clientesFiltrados, sortKey, sortDirection, obtenerValorCliente);
+  const clientesPagina = paginar(clientesOrdenados, pagina, TAMANO_PAGINA);
 
   function abrirNuevo() {
     setClienteEditando(null);
@@ -68,10 +88,10 @@ export function ClientesPage() {
   }
 
   const columns: TableColumn<Cliente>[] = [
-    { key: "nombre", header: "Nombre", render: (c) => c.nombreCompleto },
-    { key: "correo", header: "Correo", render: (c) => c.correo },
-    { key: "telefono", header: "Teléfono", render: (c) => c.telefono },
-    { key: "direccion", header: "Dirección", render: (c) => c.direccion },
+    { key: "nombre", header: "Nombre", render: (c) => c.nombreCompleto, sortable: true },
+    { key: "correo", header: "Correo", render: (c) => c.correo, sortable: true },
+    { key: "telefono", header: "Teléfono", render: (c) => c.telefono, sortable: true },
+    { key: "direccion", header: "Dirección", render: (c) => c.direccion, sortable: true },
     ...(alcance === "todos"
       ? [
           {
@@ -107,10 +127,14 @@ export function ClientesPage() {
                   size="sm"
                   onClick={(e) => {
                     e.stopPropagation();
-                    alternarEstado(c);
+                    solicitar(c.idCliente, () => alternarEstado(c));
                   }}
                 >
-                  {c.estado ? "Desactivar" : "Activar"}
+                  {idConfirmando === c.idCliente
+                    ? "¿Confirmar?"
+                    : c.estado
+                      ? "Desactivar"
+                      : "Activar"}
                 </Button>
               </div>
             ),
@@ -187,7 +211,17 @@ export function ClientesPage() {
         )}
         {clientesPagina.length > 0 && (
           <>
-            <Table columns={columns} rows={clientesPagina} getRowKey={(c) => c.idCliente} />
+            <Table
+              columns={columns}
+              rows={clientesPagina}
+              getRowKey={(c) => c.idCliente}
+              sortKey={sortKey}
+              sortDirection={sortDirection}
+              onSortChange={(key) => {
+                alternarOrden(key);
+                setPagina(1);
+              }}
+            />
             <Pagination
               page={pagina}
               totalItems={clientesFiltrados.length}

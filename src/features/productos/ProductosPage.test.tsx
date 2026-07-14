@@ -157,6 +157,8 @@ describe("ProductosPage - editar y desactivar", () => {
     renderProductosPage([productosInicial, cambiarEstadoMock, productosRefetchVacio]);
 
     await user.click(await screen.findByRole("button", { name: "Desactivar" }));
+    expect(await screen.findByRole("button", { name: "¿Confirmar?" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "¿Confirmar?" }));
 
     expect(await screen.findByText('"Monitor" fue desactivado.')).toBeInTheDocument();
     expect(await screen.findByText("Todavía no hay productos en el catálogo")).toBeInTheDocument();

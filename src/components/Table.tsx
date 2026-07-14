@@ -1,11 +1,14 @@
 import type { ReactNode } from "react";
 import styles from "./Table.module.css";
 
+export type SortDirection = "asc" | "desc";
+
 export interface TableColumn<T> {
   key: string;
   header: string;
   render: (row: T) => ReactNode;
   align?: "left" | "right" | "center";
+  sortable?: boolean;
 }
 
 interface TableProps<T> {
@@ -13,19 +16,57 @@ interface TableProps<T> {
   rows: T[];
   getRowKey: (row: T) => string;
   onRowClick?: (row: T) => void;
+  sortKey?: string | null;
+  sortDirection?: SortDirection;
+  onSortChange?: (key: string) => void;
 }
 
-export function Table<T>({ columns, rows, getRowKey, onRowClick }: TableProps<T>) {
+export function Table<T>({
+  columns,
+  rows,
+  getRowKey,
+  onRowClick,
+  sortKey,
+  sortDirection,
+  onSortChange,
+}: TableProps<T>) {
   return (
     <div className={styles.wrapper}>
       <table className={styles.table}>
         <thead>
           <tr>
-            {columns.map((col) => (
-              <th key={col.key} className={styles[col.align ?? "left"]}>
-                {col.header}
-              </th>
-            ))}
+            {columns.map((col) => {
+              const puedeOrdenar = col.sortable && onSortChange;
+              const ordenActivo = puedeOrdenar && sortKey === col.key;
+              return (
+                <th
+                  key={col.key}
+                  className={[styles[col.align ?? "left"], puedeOrdenar && styles.sortable]
+                    .filter(Boolean)
+                    .join(" ")}
+                  onClick={puedeOrdenar ? () => onSortChange(col.key) : undefined}
+                  onKeyDown={
+                    puedeOrdenar
+                      ? (e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            onSortChange(col.key);
+                          }
+                        }
+                      : undefined
+                  }
+                  tabIndex={puedeOrdenar ? 0 : undefined}
+                  aria-sort={
+                    ordenActivo ? (sortDirection === "asc" ? "ascending" : "descending") : undefined
+                  }
+                >
+                  {col.header}
+                  {ordenActivo && (
+                    <span aria-hidden="true"> {sortDirection === "asc" ? "↑" : "↓"}</span>
+                  )}
+                </th>
+              );
+            })}
           </tr>
         </thead>
         <tbody>

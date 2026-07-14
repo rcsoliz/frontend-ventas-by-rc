@@ -13,11 +13,28 @@ import { useAuth } from "../../auth/AuthContext";
 import { useVentas } from "../hooks";
 import type { VentasQuery } from "../../../graphql/generated/graphql";
 import { extraerMensajeError } from "../../../graphql/errors";
+import { formatearMoneda } from "../../../format";
+import { useOrdenamiento, ordenarPor } from "../../../hooks/useOrdenamiento";
 import styles from "./HistorialVentasPage.module.css";
 
 type Venta = VentasQuery["ventas"][number];
 
 const TAMANO_PAGINA = 10;
+
+function obtenerValorVenta(v: Venta, key: string): string | number {
+  switch (key) {
+    case "fecha":
+      return v.fechaVenta ? new Date(String(v.fechaVenta)).getTime() : 0;
+    case "cliente":
+      return v.cliente.nombreCompleto;
+    case "vendedor":
+      return v.vendedor.nombreCompleto;
+    case "total":
+      return Number(v.total);
+    default:
+      return "";
+  }
+}
 
 export function HistorialVentasPage() {
   const navigate = useNavigate();
@@ -28,6 +45,7 @@ export function HistorialVentasPage() {
   const [busqueda, setBusqueda] = useState("");
   const [alcance, setAlcance] = useState<"todas" | "mias">("todas");
   const [pagina, setPagina] = useState(1);
+  const { sortKey, sortDirection, alternarOrden } = useOrdenamiento();
 
   const ventasFiltradas = ventas.filter((v) => {
     if (alcance === "mias" && v.vendedor.idVendedor !== vendedor?.id) return false;
@@ -38,13 +56,25 @@ export function HistorialVentasPage() {
       v.vendedor.nombreCompleto.toLowerCase().includes(termino)
     );
   });
-  const ventasPagina = paginar(ventasFiltradas, pagina, TAMANO_PAGINA);
+  const ventasOrdenadas = ordenarPor(ventasFiltradas, sortKey, sortDirection, obtenerValorVenta);
+  const ventasPagina = paginar(ventasOrdenadas, pagina, TAMANO_PAGINA);
 
   const columns: TableColumn<Venta>[] = [
-    { key: "fecha", header: "Fecha", render: (v) => formatearFecha(v.fechaVenta) },
-    { key: "cliente", header: "Cliente", render: (v) => v.cliente.nombreCompleto },
-    { key: "vendedor", header: "Vendedor", render: (v) => v.vendedor.nombreCompleto },
-    { key: "total", header: "Total", align: "right", render: (v) => `Bs ${v.total}` },
+    { key: "fecha", header: "Fecha", render: (v) => formatearFecha(v.fechaVenta), sortable: true },
+    { key: "cliente", header: "Cliente", render: (v) => v.cliente.nombreCompleto, sortable: true },
+    {
+      key: "vendedor",
+      header: "Vendedor",
+      render: (v) => v.vendedor.nombreCompleto,
+      sortable: true,
+    },
+    {
+      key: "total",
+      header: "Total",
+      align: "right",
+      render: (v) => formatearMoneda(v.total),
+      sortable: true,
+    },
   ];
 
   function limpiarFiltros() {
@@ -122,6 +152,12 @@ export function HistorialVentasPage() {
               rows={ventasPagina}
               getRowKey={(v) => v.idVenta}
               onRowClick={(v) => navigate(`/ventas/${v.idVenta}`)}
+              sortKey={sortKey}
+              sortDirection={sortDirection}
+              onSortChange={(key) => {
+                alternarOrden(key);
+                setPagina(1);
+              }}
             />
             <Pagination
               page={pagina}

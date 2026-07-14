@@ -8,6 +8,7 @@ import { Skeleton, SkeletonTable } from "../../../components/Skeleton";
 import { useVenta } from "../hooks";
 import type { VentaQuery } from "../../../graphql/generated/graphql";
 import { extraerMensajeError } from "../../../graphql/errors";
+import { formatearMoneda } from "../../../format";
 import styles from "./DetalleVentaPage.module.css";
 
 type Detalle = NonNullable<VentaQuery["venta"]>["detalles"][number];
@@ -25,9 +26,14 @@ export function DetalleVentaPage() {
       key: "precioUnitario",
       header: "Precio unitario",
       align: "right",
-      render: (d) => `Bs ${d.precioUnitario}`,
+      render: (d) => formatearMoneda(d.precioUnitario),
     },
-    { key: "subtotal", header: "Subtotal", align: "right", render: (d) => `Bs ${d.subtotal}` },
+    {
+      key: "subtotal",
+      header: "Subtotal",
+      align: "right",
+      render: (d) => formatearMoneda(d.subtotal),
+    },
   ];
 
   return (
@@ -94,7 +100,7 @@ export function DetalleVentaPage() {
             </div>
             <div>
               <span className={styles.label}>Total</span>
-              <p className={styles.total}>Bs {String(venta.total)}</p>
+              <p className={styles.total}>{formatearMoneda(venta.total)}</p>
             </div>
           </Card>
 

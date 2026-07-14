@@ -11,8 +11,11 @@ import type { TableColumn } from "../../components/Table";
 import { Modal } from "../../components/Modal";
 import { Pagination, paginar } from "../../components/Pagination";
 import { useToast } from "../../components/Toast";
+import { useConfirmacionInline } from "../../hooks/useConfirmacionInline";
+import { useOrdenamiento, ordenarPor } from "../../hooks/useOrdenamiento";
 import { useAuth } from "../auth/AuthContext";
 import { esAdministrador } from "../auth/grupos";
+import { formatearMoneda } from "../../format";
 import { useCambiarEstadoProducto, useProductos } from "./hooks";
 import { ProductoForm } from "./ProductoForm";
 import type { ProductosQuery } from "../../graphql/generated/graphql";
@@ -22,6 +25,21 @@ import styles from "./ProductosPage.module.css";
 type Producto = ProductosQuery["productos"][number];
 
 const TAMANO_PAGINA = 10;
+
+function obtenerValorProducto(p: Producto, key: string): string | number {
+  switch (key) {
+    case "nombre":
+      return p.nombreProducto;
+    case "descripcion":
+      return p.descripcion;
+    case "precio":
+      return Number(p.precio);
+    case "stock":
+      return p.stock;
+    default:
+      return "";
+  }
+}
 
 export function ProductosPage() {
   const [alcance, setAlcance] = useState<"activos" | "todos">("activos");
@@ -34,12 +52,15 @@ export function ProductosPage() {
   const [pagina, setPagina] = useState(1);
   const { showToast } = useToast();
   const [cambiarEstadoProducto] = useCambiarEstadoProducto();
+  const { idConfirmando, solicitar } = useConfirmacionInline();
+  const { sortKey, sortDirection, alternarOrden } = useOrdenamiento();
 
   const productos = data?.productos ?? [];
   const productosFiltrados = productos.filter((p) =>
     p.nombreProducto.toLowerCase().includes(busqueda.trim().toLowerCase())
   );
-  const productosPagina = paginar(productosFiltrados, pagina, TAMANO_PAGINA);
+  const productosOrdenados = ordenarPor(productosFiltrados, sortKey, sortDirection, obtenerValorProducto);
+  const productosPagina = paginar(productosOrdenados, pagina, TAMANO_PAGINA);
 
   function abrirNuevo() {
     setProductoEditando(null);
@@ -68,15 +89,16 @@ export function ProductosPage() {
   }
 
   const columns: TableColumn<Producto>[] = [
-    { key: "nombre", header: "Producto", render: (p) => p.nombreProducto },
-    { key: "descripcion", header: "Descripción", render: (p) => p.descripcion },
+    { key: "nombre", header: "Producto", render: (p) => p.nombreProducto, sortable: true },
+    { key: "descripcion", header: "Descripción", render: (p) => p.descripcion, sortable: true },
     {
       key: "precio",
       header: "Precio",
       align: "right",
-      render: (p) => `Bs ${p.precio}`,
+      render: (p) => formatearMoneda(p.precio),
+      sortable: true,
     },
-    { key: "stock", header: "Stock", align: "right", render: (p) => p.stock },
+    { key: "stock", header: "Stock", align: "right", render: (p) => p.stock, sortable: true },
     ...(alcance === "todos"
       ? [
           {
@@ -112,10 +134,14 @@ export function ProductosPage() {
                   size="sm"
                   onClick={(e) => {
                     e.stopPropagation();
-                    alternarEstado(p);
+                    solicitar(p.idProducto, () => alternarEstado(p));
                   }}
                 >
-                  {p.estado ? "Desactivar" : "Activar"}
+                  {idConfirmando === p.idProducto
+                    ? "¿Confirmar?"
+                    : p.estado
+                      ? "Desactivar"
+                      : "Activar"}
                 </Button>
               </div>
             ),
@@ -196,7 +222,17 @@ export function ProductosPage() {
         )}
         {productosPagina.length > 0 && (
           <>
-            <Table columns={columns} rows={productosPagina} getRowKey={(p) => p.idProducto} />
+            <Table
+              columns={columns}
+              rows={productosPagina}
+              getRowKey={(p) => p.idProducto}
+              sortKey={sortKey}
+              sortDirection={sortDirection}
+              onSortChange={(key) => {
+                alternarOrden(key);
+                setPagina(1);
+              }}
+            />
             <Pagination
               page={pagina}
               totalItems={productosFiltrados.length}

@@ -31,4 +31,29 @@ describe("Modal", () => {
     await user.tab({ shift: true });
     expect(document.activeElement).toBe(closeButton);
   });
+
+  it("al abrir, enfoca el primer campo de formulario en vez del diálogo", () => {
+    render(
+      <Modal open onClose={vi.fn()} title="Título">
+        <form>
+          <label htmlFor="nombre">Nombre</label>
+          <input id="nombre" />
+          <label htmlFor="correo">Correo</label>
+          <input id="correo" />
+        </form>
+      </Modal>
+    );
+
+    expect(document.activeElement).toBe(screen.getByLabelText("Nombre"));
+  });
+
+  it("sin campos de formulario, cae de nuevo al contenedor del diálogo", () => {
+    render(
+      <Modal open onClose={vi.fn()} title="Título">
+        <button>Uno</button>
+      </Modal>
+    );
+
+    expect(document.activeElement).toBe(screen.getByRole("dialog"));
+  });
 });
