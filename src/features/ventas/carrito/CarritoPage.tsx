@@ -120,9 +120,15 @@ export function CarritoPage() {
           label="Cliente"
           value={idCliente}
           onChange={(e) => setIdCliente(e.target.value)}
-          disabled={clientesLoading}
+          disabled={clientesLoading || clientes.length === 0}
         >
-          <option value="">Seleccioná un cliente</option>
+          <option value="">
+            {clientesLoading
+              ? "Cargando clientes…"
+              : clientes.length === 0
+                ? "No hay clientes registrados"
+                : "Seleccioná un cliente"}
+          </option>
           {clientes.map((c) => (
             <option key={c.idCliente} value={c.idCliente}>
               {c.nombreCompleto}
@@ -137,9 +143,15 @@ export function CarritoPage() {
             label="Producto"
             value={idProducto}
             onChange={(e) => setIdProducto(e.target.value)}
-            disabled={productosLoading}
+            disabled={productosLoading || productos.length === 0}
           >
-            <option value="">Seleccioná un producto</option>
+            <option value="">
+              {productosLoading
+                ? "Cargando productos…"
+                : productos.length === 0
+                  ? "No hay productos en el catálogo"
+                  : "Seleccioná un producto"}
+            </option>
             {productos.map((p) => (
               <option key={p.idProducto} value={p.idProducto}>
                 {p.nombreProducto} (stock: {p.stock})

@@ -1,8 +1,10 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { Button } from "../../../components/Button";
 import { Card } from "../../../components/Card";
+import { EmptyState } from "../../../components/EmptyState";
 import { Table } from "../../../components/Table";
 import type { TableColumn } from "../../../components/Table";
-import { SkeletonTable } from "../../../components/Skeleton";
+import { Skeleton, SkeletonTable } from "../../../components/Skeleton";
 import { useVenta } from "../hooks";
 import type { VentaQuery } from "../../../graphql/generated/graphql";
 import { extraerMensajeError } from "../../../graphql/errors";
@@ -12,7 +14,8 @@ type Detalle = NonNullable<VentaQuery["venta"]>["detalles"][number];
 
 export function DetalleVentaPage() {
   const { idVenta = "" } = useParams<{ idVenta: string }>();
-  const { data, loading, error } = useVenta(idVenta);
+  const navigate = useNavigate();
+  const { data, loading, error, refetch } = useVenta(idVenta);
   const venta = data?.venta;
 
   const columns: TableColumn<Detalle>[] = [
@@ -35,9 +38,22 @@ export function DetalleVentaPage() {
       <h1>Detalle de venta</h1>
 
       {loading && (
-        <Card>
-          <SkeletonTable rows={3} columns={4} />
-        </Card>
+        <>
+          <Card className={styles.summary}>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i}>
+                <Skeleton width="60%" height={12} />
+                <Skeleton width="80%" height={16} className={styles.skeletonValue} />
+              </div>
+            ))}
+          </Card>
+          <Card>
+            <SkeletonTable rows={3} columns={4} />
+          </Card>
+          <Card className={styles.facturacionPlaceholder}>
+            <Skeleton width="40%" height={12} />
+          </Card>
+        </>
       )}
 
       {error && !loading && (
@@ -45,12 +61,19 @@ export function DetalleVentaPage() {
           <p role="alert" className={styles.error}>
             {extraerMensajeError(error)}
           </p>
+          <Button variant="secondary" onClick={() => refetch()}>
+            Reintentar
+          </Button>
         </Card>
       )}
 
       {!loading && !error && !venta && (
         <Card>
-          <p className={styles.error}>No se encontró la venta solicitada.</p>
+          <EmptyState
+            title="Venta no encontrada"
+            description="No se encontró la venta solicitada. Puede que el enlace esté vencido o incorrecto."
+            action={<Button onClick={() => navigate("/ventas")}>Volver al historial</Button>}
+          />
         </Card>
       )}
 

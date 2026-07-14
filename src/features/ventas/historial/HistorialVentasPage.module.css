@@ -14,6 +14,18 @@
   font-size: 20px;
 }
 
+.filters {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.filters > *:first-child {
+  flex: 1;
+  min-width: 200px;
+}
+
 .error {
   color: var(--color-danger);
+  margin-bottom: var(--space-3);
 }

@@ -33,6 +33,7 @@
 
 .label {
   font-size: 12px;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   color: var(--color-text-subtle);
@@ -53,8 +54,13 @@
   color: var(--color-text-subtle);
 }
 
+.skeletonValue {
+  margin-top: var(--space-1);
+}
+
 .error {
   color: var(--color-danger);
+  margin-bottom: var(--space-3);
 }
 
 @media (max-width: 640px) {

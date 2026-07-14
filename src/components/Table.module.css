@@ -2,7 +2,20 @@
   overflow-x: auto;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  background: var(--color-surface);
+  /* Scroll-shadow cue: two solid gradients mask the edges (scroll with content),
+     two shadow gradients sit above them (fixed to the viewport). Both fade out
+     once there's nothing left to scroll to on that side, so the cue only shows
+     when it's true — no JS needed. */
+  background-image:
+    linear-gradient(to right, var(--color-surface) 30%, transparent),
+    linear-gradient(to left, var(--color-surface) 30%, transparent),
+    linear-gradient(to right, rgba(17, 17, 17, 0.12), transparent),
+    linear-gradient(to left, rgba(17, 17, 17, 0.12), transparent);
+  background-repeat: no-repeat;
+  background-color: var(--color-surface);
+  background-size: 24px 100%, 24px 100%, 8px 100%, 8px 100%;
+  background-position: left center, right center, left center, right center;
+  background-attachment: local, local, scroll, scroll;
 }
 
 .table {
@@ -41,6 +54,17 @@
 
 .clickable {
   cursor: pointer;
+}
+
+/* outline on <tr> in a border-collapse table doesn't reliably paint (Chromium);
+   apply the focus ring per-cell instead so it's actually visible. */
+.clickable:focus-visible {
+  outline: none;
+}
+
+.clickable:focus-visible td {
+  background: var(--color-bg);
+  box-shadow: inset 0 0 0 2px var(--color-focus-ring);
 }
 
 .left {

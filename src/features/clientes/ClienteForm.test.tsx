@@ -49,4 +49,26 @@ describe("ClienteForm", () => {
     expect(screen.getByLabelText("Correo")).toHaveAttribute("aria-invalid", "true");
     expect(onSuccess).not.toHaveBeenCalled();
   });
+
+  it("campos vacíos muestran mensajes propios en español, no el popover nativo del navegador", async () => {
+    const user = userEvent.setup();
+    const onSuccess = vi.fn();
+
+    const { container } = render(
+      <MockedProvider mocks={[]}>
+        <ClienteForm onSuccess={onSuccess} />
+      </MockedProvider>
+    );
+
+    expect(container.querySelector("form")).toHaveAttribute("novalidate");
+
+    await user.click(screen.getByRole("button", { name: "Crear cliente" }));
+
+    expect(await screen.findByText("Ingresá el nombre.")).toBeInTheDocument();
+    expect(screen.getByText("Ingresá el apellido.")).toBeInTheDocument();
+    expect(screen.getByText("Ingresá un correo con formato válido.")).toBeInTheDocument();
+    expect(screen.getByText("Ingresá el teléfono.")).toBeInTheDocument();
+    expect(screen.getByText("Ingresá la dirección.")).toBeInTheDocument();
+    expect(onSuccess).not.toHaveBeenCalled();
+  });
 });

@@ -67,7 +67,8 @@
       "page-title": { "displayName": "Page Title", "purpose": "h1 de cada pantalla (Ventas, Clientes, Productos, Nueva venta, Detalle de venta). El tamaño más grande del sistema (20px)." },
       "title": { "displayName": "Title", "purpose": "Título de modal, marca del sidebar (16px)." },
       "body": { "displayName": "Body", "purpose": "Texto de tabla, inputs, botones md, contenido general." },
-      "label": { "displayName": "Label", "purpose": "Labels de formulario, botones sm, metadatos de usuario." }
+      "label": { "displayName": "Label", "purpose": "Labels de formulario, botones sm, metadatos de usuario." },
+      "caption": { "displayName": "Caption", "purpose": "Encabezados de tabla, rol de usuario, hints (12px, uppercase, letter-spacing 0.03em) — único uso de mayúsculas + tracking del sistema, reservado a metadatos, nunca a contenido de negocio." }
     },
     "shadows": [
       { "name": "ambient", "value": "0 1px 2px rgba(17, 17, 17, 0.03)", "purpose": "Cards en reposo, casi imperceptible." },

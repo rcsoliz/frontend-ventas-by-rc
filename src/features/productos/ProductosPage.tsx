@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
 import { EmptyState } from "../../components/EmptyState";
+import { Input } from "../../components/Input";
 import { SkeletonTable } from "../../components/Skeleton";
 import { Table } from "../../components/Table";
 import type { TableColumn } from "../../components/Table";
@@ -22,9 +23,13 @@ export function ProductosPage() {
   const { vendedor } = useAuth();
   const puedeCrearProducto = esAdministrador(vendedor);
   const [modalAbierto, setModalAbierto] = useState(false);
+  const [busqueda, setBusqueda] = useState("");
   const { showToast } = useToast();
 
   const productos = data?.productos ?? [];
+  const productosFiltrados = productos.filter((p) =>
+    p.nombreProducto.toLowerCase().includes(busqueda.trim().toLowerCase())
+  );
 
   const columns: TableColumn<Producto>[] = [
     { key: "nombre", header: "Producto", render: (p) => p.nombreProducto },
@@ -52,6 +57,15 @@ export function ProductosPage() {
         )}
       </div>
 
+      {!loading && !error && productos.length > 0 && (
+        <Input
+          label="Buscar"
+          placeholder="Nombre del producto..."
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
+      )}
+
       <Card>
         {loading && <SkeletonTable columns={4} />}
         {error && !loading && (
@@ -74,14 +88,29 @@ export function ProductosPage() {
             }
           />
         )}
-        {!loading && !error && productos.length > 0 && (
-          <Table columns={columns} rows={productos} getRowKey={(p) => p.idProducto} />
+        {!loading && !error && productos.length > 0 && productosFiltrados.length === 0 && (
+          <EmptyState
+            title="No se encontraron productos"
+            description="Probá con otro término de búsqueda."
+            action={
+              <Button variant="secondary" onClick={() => setBusqueda("")}>
+                Limpiar búsqueda
+              </Button>
+            }
+          />
+        )}
+        {!loading && !error && productosFiltrados.length > 0 && (
+          <Table columns={columns} rows={productosFiltrados} getRowKey={(p) => p.idProducto} />
         )}
       </Card>
 
       {puedeCrearProducto && (
         <Modal open={modalAbierto} onClose={() => setModalAbierto(false)} title="Nuevo producto">
-          <ProductoForm onSuccess={handleSuccess} />
+          <ProductoForm
+            onSuccess={handleSuccess}
+            onCancel={() => setModalAbierto(false)}
+            nombresExistentes={productos.map((p) => p.nombreProducto)}
+          />
         </Modal>
       )}
     </div>

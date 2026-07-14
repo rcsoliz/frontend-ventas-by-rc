@@ -51,6 +51,7 @@ Nota de seguridad heredada del backend: `login` devuelve un JWT sin mecanismo de
 
 - [ ] Clientes: listado (`clientes(soloActivos)`), alta (`crearCliente`) — formulario con `react-hook-form` + `zod` (validación de campos requeridos y formato de correo antes de enviar, con errores inline, no el globo nativo del navegador). El error de "correo duplicado" del backend (`ClienteDuplicadoError`) se muestra en el campo correspondiente, no como toast genérico.
 - [ ] Productos: catálogo (`productos(soloActivos)`), alta (`crearProducto`, solo visible/accesible para el grupo `Administradores`, coordinar el gating con `auth-frontend`) — mismo patrón `react-hook-form` + `zod`.
+- [ ] Productos: edición y baja (desactivar) de un producto existente. Hoy el catálogo es solo-alta — no hay forma de corregir un producto cargado ni de retirarlo del catálogo sin tocar la base de datos directamente. Requiere un caso de uso + mutación nuevos en el backend (`actualizarProducto` / equivalente; no existe hoy, solo `crearProducto`) antes de poder implementarse en el frontend. Detectado en la pasada de revisión de diseño de `/impeccable` sobre `ProductosPage` (2026-07-14).
 - [ ] `sonner`: `toast.success(...)` al crear cliente/producto exitosamente; `toast.error(mensaje)` para errores que no sean de un campo específico (ej. error de red).
 - [ ] Ambas pantallas consumen los hooks tipados generados por `graphql-client` — no escribir queries GraphQL sueltas dentro de los componentes.
 
