@@ -108,6 +108,11 @@ export function ProductoForm({
 
   return (
     <form onSubmit={handleSubmit} className={styles.form} noValidate>
+      {producto && (
+        <p className={styles.editingContext}>
+          Editando <strong>{producto.nombreProducto}</strong>
+        </p>
+      )}
       <Input
         label="Nombre"
         value={nombreProducto}
@@ -117,6 +122,7 @@ export function ProductoForm({
         }}
         error={errores.nombreProducto}
         hint={posibleDuplicado ? "Ya existe un producto con este nombre." : undefined}
+        hintTone="notice"
         required
       />
       <Input
@@ -129,32 +135,34 @@ export function ProductoForm({
         error={errores.descripcion}
         required
       />
-      <Input
-        label="Precio"
-        type="number"
-        min="0.01"
-        step="0.01"
-        value={precio}
-        onChange={(e) => {
-          setPrecio(e.target.value);
-          limpiarError("precio");
-        }}
-        error={errores.precio}
-        required
-      />
-      <Input
-        label={producto ? "Stock" : "Stock inicial"}
-        type="number"
-        min="0"
-        step="1"
-        value={stock}
-        onChange={(e) => {
-          setStock(e.target.value);
-          limpiarError("stock");
-        }}
-        error={errores.stock}
-        required
-      />
+      <div className={styles.row}>
+        <Input
+          label="Precio"
+          type="number"
+          min="0.01"
+          step="0.01"
+          value={precio}
+          onChange={(e) => {
+            setPrecio(e.target.value);
+            limpiarError("precio");
+          }}
+          error={errores.precio}
+          required
+        />
+        <Input
+          label={producto ? "Stock" : "Stock inicial"}
+          type="number"
+          min="0"
+          step="1"
+          value={stock}
+          onChange={(e) => {
+            setStock(e.target.value);
+            limpiarError("stock");
+          }}
+          error={errores.stock}
+          required
+        />
+      </div>
       {formError && (
         <p className={styles.error} role="alert">
           {formError}

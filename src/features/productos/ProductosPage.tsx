@@ -11,6 +11,7 @@ import type { TableColumn } from "../../components/Table";
 import { Modal } from "../../components/Modal";
 import { Pagination, paginar } from "../../components/Pagination";
 import { useToast } from "../../components/Toast";
+import { IconBox, IconPlus } from "../../components/icons";
 import { useConfirmacionInline } from "../../hooks/useConfirmacionInline";
 import { useOrdenamiento, ordenarPor } from "../../hooks/useOrdenamiento";
 import { useAuth } from "../auth/AuthContext";
@@ -25,6 +26,21 @@ import styles from "./ProductosPage.module.css";
 type Producto = ProductosQuery["productos"][number];
 
 const TAMANO_PAGINA = 10;
+
+/**
+ * El schema de GraphQL no expone un campo de stock mínimo por producto (ver
+ * productos.graphql) — se usan dos umbrales fijos, nombrados, en vez de un
+ * número mágico repetido. Ajustar acá si el backend llega a exponer un valor
+ * configurable por producto.
+ */
+const UMBRAL_STOCK_CRITICO = 10;
+const UMBRAL_STOCK_BAJO = 20;
+
+function obtenerVarianteStock(stock: number): "success" | "warning" | "danger" {
+  if (stock < UMBRAL_STOCK_CRITICO) return "danger";
+  if (stock < UMBRAL_STOCK_BAJO) return "warning";
+  return "success";
+}
 
 function obtenerValorProducto(p: Producto, key: string): string | number {
   switch (key) {
@@ -89,7 +105,19 @@ export function ProductosPage() {
   }
 
   const columns: TableColumn<Producto>[] = [
-    { key: "nombre", header: "Producto", render: (p) => p.nombreProducto, sortable: true },
+    {
+      key: "nombre",
+      header: "Producto",
+      render: (p) => (
+        <div className={styles.productoCelda}>
+          <span className={styles.productoIcono} aria-hidden="true">
+            <IconBox />
+          </span>
+          <span>{p.nombreProducto}</span>
+        </div>
+      ),
+      sortable: true,
+    },
     { key: "descripcion", header: "Descripción", render: (p) => p.descripcion, sortable: true },
     {
       key: "precio",
@@ -98,7 +126,13 @@ export function ProductosPage() {
       render: (p) => formatearMoneda(p.precio),
       sortable: true,
     },
-    { key: "stock", header: "Stock", align: "right", render: (p) => p.stock, sortable: true },
+    {
+      key: "stock",
+      header: "Stock",
+      align: "right",
+      render: (p) => <Badge variant={obtenerVarianteStock(p.stock)}>{p.stock} unid.</Badge>,
+      sortable: true,
+    },
     ...(alcance === "todos"
       ? [
           {
@@ -162,33 +196,45 @@ export function ProductosPage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1>Productos</h1>
-        {puedeGestionarProductos && <Button onClick={abrirNuevo}>Nuevo producto</Button>}
+        <div className={styles.headerText}>
+          <h1>Productos</h1>
+          <p className={styles.description}>
+            Gestiona el inventario, precios y estados de tus artículos comerciales.
+          </p>
+        </div>
+        {puedeGestionarProductos && (
+          <Button onClick={abrirNuevo}>
+            <IconPlus />
+            Nuevo producto
+          </Button>
+        )}
       </div>
 
       {!loading && !error && productos.length > 0 && (
-        <div className={styles.filters}>
-          <Input
-            label="Buscar"
-            placeholder="Nombre del producto..."
-            value={busqueda}
-            onChange={(e) => {
-              setBusqueda(e.target.value);
-              setPagina(1);
-            }}
-          />
-          <Select
-            label="Mostrar"
-            value={alcance}
-            onChange={(e) => {
-              setAlcance(e.target.value as "activos" | "todos");
-              setPagina(1);
-            }}
-          >
-            <option value="activos">Solo activos</option>
-            <option value="todos">Todos (incluye inactivos)</option>
-          </Select>
-        </div>
+        <Card className={styles.filtersCard}>
+          <div className={styles.filters}>
+            <Input
+              label="Buscar"
+              placeholder="Nombre del producto..."
+              value={busqueda}
+              onChange={(e) => {
+                setBusqueda(e.target.value);
+                setPagina(1);
+              }}
+            />
+            <Select
+              label="Mostrar"
+              value={alcance}
+              onChange={(e) => {
+                setAlcance(e.target.value as "activos" | "todos");
+                setPagina(1);
+              }}
+            >
+              <option value="activos">Solo activos</option>
+              <option value="todos">Todos (incluye inactivos)</option>
+            </Select>
+          </div>
+        </Card>
       )}
 
       <Card>

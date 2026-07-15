@@ -23,13 +23,17 @@
 
 .track {
   min-width: 0;
+  height: 16px;
+  border-radius: var(--radius-full);
+  background: var(--color-bg);
+  overflow: hidden;
 }
 
 .bar {
-  height: 20px;
+  height: 100%;
   background: var(--color-primary);
-  border-radius: 0 4px 4px 0;
-  min-width: 2px;
+  border-radius: var(--radius-full);
+  min-width: 8px;
   transition: background-color var(--duration-fast) var(--ease-out);
 }
 

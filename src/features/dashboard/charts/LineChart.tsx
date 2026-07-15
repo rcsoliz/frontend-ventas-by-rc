@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import styles from "./LineChart.module.css";
 
@@ -32,9 +32,33 @@ function techoLimpio(max: number): number {
   return 10 * magnitud;
 }
 
+/**
+ * Curva suave (Catmull-Rom → Bézier cúbica, tensión 1/6) que pasa exactamente
+ * por cada punto — a diferencia de una curva puramente decorativa, no
+ * distorsiona los valores reales entre puntos, solo suaviza el trazo.
+ */
+function pathSuave(puntos: { x: number; y: number }[]): string {
+  if (puntos.length === 0) return "";
+  if (puntos.length === 1) return `M ${puntos[0].x} ${puntos[0].y}`;
+  let d = `M ${puntos[0].x} ${puntos[0].y}`;
+  for (let i = 0; i < puntos.length - 1; i++) {
+    const p0 = puntos[i === 0 ? i : i - 1];
+    const p1 = puntos[i];
+    const p2 = puntos[i + 1];
+    const p3 = puntos[i + 2 < puntos.length ? i + 2 : i + 1];
+    const cp1x = p1.x + (p2.x - p0.x) / 6;
+    const cp1y = p1.y + (p2.y - p0.y) / 6;
+    const cp2x = p2.x - (p3.x - p1.x) / 6;
+    const cp2y = p2.y - (p3.y - p1.y) / 6;
+    d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+  }
+  return d;
+}
+
 /** Línea de una sola serie (ingresos por día): sin leyenda, ver marks-and-anatomy.md. */
 export function LineChart({ points, formatValue, formatX }: LineChartProps) {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+  const gradientId = useId();
 
   const plotWidth = WIDTH - PAD_LEFT - PAD_RIGHT;
   const plotHeight = HEIGHT - PAD_TOP - PAD_BOTTOM;
@@ -48,7 +72,8 @@ export function LineChart({ points, formatValue, formatX }: LineChartProps) {
     return PAD_TOP + plotHeight - (value / maxValue) * plotHeight;
   }
 
-  const linePath = points.map((p, i) => `${i === 0 ? "M" : "L"} ${xAt(i)} ${yAt(p.value)}`).join(" ");
+  const puntosXY = points.map((p, i) => ({ x: xAt(i), y: yAt(p.value) }));
+  const linePath = pathSuave(puntosXY);
   const areaPath =
     points.length > 1
       ? `${linePath} L ${xAt(points.length - 1)} ${PAD_TOP + plotHeight} L ${xAt(0)} ${PAD_TOP + plotHeight} Z`
@@ -101,6 +126,12 @@ export function LineChart({ points, formatValue, formatX }: LineChartProps) {
       onBlur={() => setHoverIndex(null)}
     >
       <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className={styles.svg} aria-hidden="true">
+        <defs>
+          <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" style={{ stopColor: "var(--color-primary)", stopOpacity: 0.16 }} />
+            <stop offset="100%" style={{ stopColor: "var(--color-primary)", stopOpacity: 0 }} />
+          </linearGradient>
+        </defs>
         {ticks.map((tick) => (
           <g key={tick}>
             <line
@@ -116,7 +147,7 @@ export function LineChart({ points, formatValue, formatX }: LineChartProps) {
           </g>
         ))}
 
-        {points.length > 1 && <path d={areaPath} className={styles.area} />}
+        {points.length > 1 && <path d={areaPath} fill={`url(#${gradientId})`} stroke="none" />}
         {points.length > 1 && <path d={linePath} className={styles.line} />}
         {points.length === 1 && <circle cx={xAt(0)} cy={yAt(points[0].value)} r={4} className={styles.dot} />}
 

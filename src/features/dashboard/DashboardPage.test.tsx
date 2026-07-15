@@ -58,7 +58,10 @@ describe("DashboardPage", () => {
 
     expect(await screen.findByTestId("kpi-ingresos-totales")).toHaveTextContent("Bs 200,00");
     expect(screen.getByTestId("kpi-cantidad-ventas")).toHaveTextContent("1");
-    expect(screen.getByText("Camisa")).toBeInTheDocument();
+    // "Camisa" también aparece en el callout "Dato clave" (mismo producto, insight
+    // calculado a partir de topProductos) — se usa `getByTitle` para apuntar
+    // puntualmente a la fila del gráfico "Productos más vendidos".
+    expect(screen.getByTitle("Camisa")).toBeInTheDocument();
   });
 
   it('cambiar el período a "Todo" incluye las ventas fuera de la ventana de 30 días', async () => {

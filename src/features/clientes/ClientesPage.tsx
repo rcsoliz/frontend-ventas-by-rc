@@ -11,6 +11,7 @@ import type { TableColumn } from "../../components/Table";
 import { Modal } from "../../components/Modal";
 import { Pagination, paginar } from "../../components/Pagination";
 import { useToast } from "../../components/Toast";
+import { IconPlus, IconUser } from "../../components/icons";
 import { useConfirmacionInline } from "../../hooks/useConfirmacionInline";
 import { useOrdenamiento, ordenarPor } from "../../hooks/useOrdenamiento";
 import { useAuth } from "../auth/AuthContext";
@@ -88,7 +89,19 @@ export function ClientesPage() {
   }
 
   const columns: TableColumn<Cliente>[] = [
-    { key: "nombre", header: "Nombre", render: (c) => c.nombreCompleto, sortable: true },
+    {
+      key: "nombre",
+      header: "Nombre",
+      render: (c) => (
+        <div className={styles.clienteCelda}>
+          <span className={styles.clienteIcono} aria-hidden="true">
+            <IconUser />
+          </span>
+          <span>{c.nombreCompleto}</span>
+        </div>
+      ),
+      sortable: true,
+    },
     { key: "correo", header: "Correo", render: (c) => c.correo, sortable: true },
     { key: "telefono", header: "Teléfono", render: (c) => c.telefono, sortable: true },
     { key: "direccion", header: "Dirección", render: (c) => c.direccion, sortable: true },
@@ -155,33 +168,43 @@ export function ClientesPage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1>Clientes</h1>
-        <Button onClick={abrirNuevo}>Nuevo cliente</Button>
+        <div className={styles.headerText}>
+          <h1>Clientes</h1>
+          <p className={styles.description}>
+            Gestiona la información de contacto y el estado de tus clientes.
+          </p>
+        </div>
+        <Button onClick={abrirNuevo}>
+          <IconPlus />
+          Nuevo cliente
+        </Button>
       </div>
 
       {!loading && !error && clientes.length > 0 && (
-        <div className={styles.filters}>
-          <Input
-            label="Buscar"
-            placeholder="Nombre del cliente..."
-            value={busqueda}
-            onChange={(e) => {
-              setBusqueda(e.target.value);
-              setPagina(1);
-            }}
-          />
-          <Select
-            label="Mostrar"
-            value={alcance}
-            onChange={(e) => {
-              setAlcance(e.target.value as "activos" | "todos");
-              setPagina(1);
-            }}
-          >
-            <option value="activos">Solo activos</option>
-            <option value="todos">Todos (incluye inactivos)</option>
-          </Select>
-        </div>
+        <Card className={styles.filtersCard}>
+          <div className={styles.filters}>
+            <Input
+              label="Buscar"
+              placeholder="Nombre del cliente..."
+              value={busqueda}
+              onChange={(e) => {
+                setBusqueda(e.target.value);
+                setPagina(1);
+              }}
+            />
+            <Select
+              label="Mostrar"
+              value={alcance}
+              onChange={(e) => {
+                setAlcance(e.target.value as "activos" | "todos");
+                setPagina(1);
+              }}
+            >
+              <option value="activos">Solo activos</option>
+              <option value="todos">Todos (incluye inactivos)</option>
+            </Select>
+          </div>
+        </Card>
       )}
 
       <Card>

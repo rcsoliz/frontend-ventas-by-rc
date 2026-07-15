@@ -1,27 +1,38 @@
 :root {
-  /* Warm monochrome (minimalist-ui): el color es un recurso escaso, casi
-     todo se resuelve en escala de grises cálidos + acentos pastel. */
-  --color-bg: #f7f6f3;
+  /* "Clarity" (v2, 2026-07-14): sistema SaaS claro adoptado desde mockups de
+     Stitch, en reemplazo de la paleta monocromática "The Ledger" (v1). El
+     negro primario se mantiene para acciones principales; todo lo demás se
+     abre a una paleta de superficie azulada, badges de estado en pastilla,
+     y sombra suave real (no la casi-invisible de v1). */
+  --color-bg: #f4f6fb;
   --color-surface: #ffffff;
-  --color-border: #eaeaea;
-  --color-border-strong: #dcdad5;
-  --color-text: #111111;
-  --color-text-muted: #5f5e5b;
-  --color-text-subtle: #918f8a;
+  --color-border: #e6e9f4;
+  --color-border-strong: #d6dbec;
+  --color-text: #111827;
+  --color-text-muted: #64748b;
+  --color-text-subtle: #94a3b8;
 
   --color-primary: #111111;
-  --color-primary-hover: #333333;
+  --color-primary-hover: #2d2d2d;
   --color-primary-text: #ffffff;
 
-  --color-danger: #9f2f2d;
-  --color-danger-bg: #fdebec;
-  --color-danger-border: #f3d2d1;
+  --color-accent: #2563eb;
+  --color-accent-bg: #eff4ff;
+  --color-accent-border: #c7d9fb;
 
-  --color-success: #346538;
-  --color-success-bg: #edf3ec;
-  --color-success-border: #cfe3cd;
+  --color-danger: #dc2626;
+  --color-danger-bg: #fee2e2;
+  --color-danger-border: #fecaca;
 
-  --color-focus-ring: rgba(17, 17, 17, 0.35);
+  --color-success: #16a34a;
+  --color-success-bg: #dcfce7;
+  --color-success-border: #bbf7d0;
+
+  --color-warning: #d97706;
+  --color-warning-bg: #fef3c7;
+  --color-warning-border: #fde68a;
+
+  --color-focus-ring: rgba(37, 99, 235, 0.35);
 
   --font-sans: "Helvetica Neue", "Segoe UI", -apple-system, system-ui, sans-serif;
   --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, monospace;
@@ -34,14 +45,15 @@
   --space-6: 32px;
   --space-7: 48px;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 12px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 999px;
 
-  /* Sombras casi inexistentes: ultra difusas, opacidad muy baja. */
-  --shadow-sm: 0 1px 2px rgba(17, 17, 17, 0.03);
-  --shadow-md: 0 2px 8px rgba(17, 17, 17, 0.04);
-  --shadow-lg: 0 8px 28px rgba(17, 17, 17, 0.08);
+  /* Sombra suave real: perceptible en reposo (cards, topbar), no solo en overlays. */
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --shadow-md: 0 4px 8px rgba(16, 24, 40, 0.06), 0 2px 4px rgba(16, 24, 40, 0.04);
+  --shadow-lg: 0 12px 24px rgba(16, 24, 40, 0.1);
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
@@ -51,31 +63,39 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #121110;
-    --color-surface: #1a1918;
-    --color-border: #2b2a28;
-    --color-border-strong: #3d3b38;
-    --color-text: #f2f1ee;
-    --color-text-muted: #a8a6a1;
-    --color-text-subtle: #78766f;
+    --color-bg: #0f1115;
+    --color-surface: #171a21;
+    --color-border: #262b36;
+    --color-border-strong: #363c4a;
+    --color-text: #f1f3f9;
+    --color-text-muted: #a0a6b8;
+    --color-text-subtle: #6b7284;
 
-    --color-primary: #f2f1ee;
+    --color-primary: #f1f3f9;
     --color-primary-hover: #ffffff;
-    --color-primary-text: #121110;
+    --color-primary-text: #14161b;
 
-    --color-danger: #e5928f;
-    --color-danger-bg: #2a1615;
-    --color-danger-border: #4a2422;
+    --color-accent: #5b8def;
+    --color-accent-bg: #16233d;
+    --color-accent-border: #253a5e;
 
-    --color-success: #8fbf90;
-    --color-success-bg: #16211a;
-    --color-success-border: #2a3d2c;
+    --color-danger: #f16565;
+    --color-danger-bg: #35191a;
+    --color-danger-border: #58292a;
 
-    --color-focus-ring: rgba(242, 241, 238, 0.4);
+    --color-success: #4ade80;
+    --color-success-bg: #132a1c;
+    --color-success-border: #204631;
 
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.28);
-    --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.4);
+    --color-warning: #f2ac47;
+    --color-warning-bg: #362707;
+    --color-warning-border: #5a3f0c;
+
+    --color-focus-ring: rgba(91, 141, 239, 0.45);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.32), 0 2px 4px rgba(0, 0, 0, 0.24);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.45);
   }
 }
 

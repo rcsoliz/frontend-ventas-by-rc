@@ -4,6 +4,7 @@ import { Button } from "../../../components/Button";
 import { Card } from "../../../components/Card";
 import { EmptyState } from "../../../components/EmptyState";
 import { Input } from "../../../components/Input";
+import { KebabMenu } from "../../../components/KebabMenu";
 import { Select } from "../../../components/Select";
 import { SkeletonTable } from "../../../components/Skeleton";
 import { Table } from "../../../components/Table";
@@ -11,6 +12,7 @@ import type { TableColumn } from "../../../components/Table";
 import { Pagination, paginar } from "../../../components/Pagination";
 import { useAuth } from "../../auth/AuthContext";
 import { useVentas } from "../hooks";
+import { VentasTabs } from "../VentasTabs";
 import type { VentasQuery } from "../../../graphql/generated/graphql";
 import { extraerMensajeError } from "../../../graphql/errors";
 import { formatearMoneda } from "../../../format";
@@ -65,7 +67,7 @@ export function HistorialVentasPage() {
     {
       key: "vendedor",
       header: "Vendedor",
-      render: (v) => v.vendedor.nombreCompleto,
+      render: (v) => <span className={styles.vendedor}>{v.vendedor.nombreCompleto}</span>,
       sortable: true,
     },
     {
@@ -74,6 +76,17 @@ export function HistorialVentasPage() {
       align: "right",
       render: (v) => formatearMoneda(v.total),
       sortable: true,
+    },
+    {
+      key: "acciones",
+      header: "Acciones",
+      align: "right",
+      render: (v) => (
+        <KebabMenu
+          label={`Acciones para la venta de ${v.cliente.nombreCompleto}`}
+          actions={[{ label: "Ver detalle", onClick: () => navigate(`/ventas/${v.idVenta}`) }]}
+        />
+      ),
     },
   ];
 
@@ -85,33 +98,33 @@ export function HistorialVentasPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <h1>Ventas</h1>
-        <Button onClick={() => navigate("/ventas/nueva")}>Nueva venta</Button>
-      </div>
+      <VentasTabs />
 
       {!loading && !error && ventas.length > 0 && (
-        <div className={styles.filters}>
-          <Input
-            label="Buscar"
-            placeholder="Cliente o vendedor..."
-            value={busqueda}
-            onChange={(e) => {
-              setBusqueda(e.target.value);
-              setPagina(1);
-            }}
-          />
-          <Select
-            label="Alcance"
-            value={alcance}
-            onChange={(e) => {
-              setAlcance(e.target.value as "todas" | "mias");
-              setPagina(1);
-            }}
-          >
-            <option value="todas">Todas las ventas</option>
-            <option value="mias">Solo mis ventas</option>
-          </Select>
+        <div className={styles.filtersBlock}>
+          <span className={styles.filtersLabel}>Filtrar por</span>
+          <div className={styles.filters}>
+            <Input
+              label="Buscar"
+              placeholder="Cliente o vendedor..."
+              value={busqueda}
+              onChange={(e) => {
+                setBusqueda(e.target.value);
+                setPagina(1);
+              }}
+            />
+            <Select
+              label="Alcance"
+              value={alcance}
+              onChange={(e) => {
+                setAlcance(e.target.value as "todas" | "mias");
+                setPagina(1);
+              }}
+            >
+              <option value="todas">Todas las ventas</option>
+              <option value="mias">Solo mis ventas</option>
+            </Select>
+          </div>
         </div>
       )}
 

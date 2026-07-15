@@ -3,10 +3,9 @@
   flex-direction: column;
   gap: var(--space-5);
   max-width: 720px;
-}
-
-.page h1 {
-  font-size: 20px;
+  /* Deja lugar para que el footer sticky (total + confirmar) nunca tape la
+     última fila del carrito en pantallas largas. */
+  padding-bottom: var(--space-3);
 }
 
 .section {
@@ -15,22 +14,36 @@
   gap: var(--space-4);
 }
 
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stepLabel {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-subtle);
+}
+
+.cardTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
 .lineForm {
   display: grid;
   grid-template-columns: 2fr 1fr auto;
   gap: var(--space-3);
-  align-items: end;
+  align-items: start;
 }
 
-.total {
-  align-self: flex-end;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.actions {
-  display: flex;
-  justify-content: flex-end;
+.addButton {
+  /* Alinea el botón con la línea base de los campos, no con su label+hint. */
+  margin-top: 22px;
 }
 
 .error {
@@ -42,8 +55,86 @@
   padding: var(--space-3) var(--space-4);
 }
 
+/* Barra de acción fija al pie de la pantalla: el total y "Confirmar venta"
+   quedan siempre visibles, incluso con un carrito largo. En v2 ("Elevación
+   Real") es una superficie elevada de verdad -- fondo blanco, esquinas
+   superiores redondeadas y shadow-md -- en vez del borde plano de v1. */
+.footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  box-shadow: var(--shadow-md);
+  padding: var(--space-4) var(--space-5);
+}
+
+.footerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.totalBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.totalLabel {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-subtle);
+}
+
+.totalValue {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.confirmBlock {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.footerHint {
+  font-size: 12px;
+  color: var(--color-text-subtle);
+}
+
 @media (max-width: 640px) {
   .lineForm {
     grid-template-columns: 1fr;
+  }
+
+  .addButton {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .footerRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
+
+  .confirmBlock {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .footerHint {
+    text-align: right;
   }
 }

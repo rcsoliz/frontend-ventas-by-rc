@@ -12,6 +12,7 @@ import { useToast } from "../../../components/Toast";
 import { useClientes } from "../../clientes/hooks";
 import { useProductos } from "../../productos/hooks";
 import { useRegistrarVenta } from "../hooks";
+import { VentasTabs } from "../VentasTabs";
 import { useCarrito } from "./useCarrito";
 import type { LineaCarrito } from "./useCarrito";
 import { extraerMensajeError } from "../../../graphql/errors";
@@ -102,8 +103,14 @@ export function CarritoPage() {
     {
       key: "acciones",
       header: "",
+      align: "right",
       render: (l) => (
-        <Button variant="ghost" size="sm" onClick={() => quitarLinea(l.producto.idProducto)}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => quitarLinea(l.producto.idProducto)}
+          aria-label={`Quitar ${l.producto.nombreProducto} del carrito`}
+        >
           Quitar
         </Button>
       ),
@@ -111,12 +118,18 @@ export function CarritoPage() {
   ];
 
   const puedeConfirmar = idCliente !== "" && lineas.length > 0 && !enviando;
+  const motivoBloqueo =
+    idCliente === "" ? "Seleccioná un cliente para continuar." : "Agregá al menos un producto al carrito.";
 
   return (
     <div className={styles.page}>
-      <h1>Nueva venta</h1>
+      <VentasTabs />
 
       <Card className={styles.section}>
+        <div className={styles.cardHeader}>
+          <span className={styles.stepLabel}>Paso 1</span>
+          <h2 className={styles.cardTitle}>Cliente</h2>
+        </div>
         <Select
           label="Cliente"
           value={idCliente}
@@ -139,6 +152,10 @@ export function CarritoPage() {
       </Card>
 
       <Card className={styles.section}>
+        <div className={styles.cardHeader}>
+          <span className={styles.stepLabel}>Paso 2</span>
+          <h2 className={styles.cardTitle}>Agregar productos</h2>
+        </div>
         <form onSubmit={handleAgregarLinea} className={styles.lineForm} noValidate>
           <Select
             label="Producto"
@@ -173,8 +190,9 @@ export function CarritoPage() {
               setCantidad(e.target.value);
               setErrorLinea(null);
             }}
+            hint={productoSeleccionado ? `Disponible: ${productoSeleccionado.stock}` : undefined}
           />
-          <Button type="submit" variant="secondary" disabled={!idProducto}>
+          <Button type="submit" variant="secondary" disabled={!idProducto} className={styles.addButton}>
             Agregar
           </Button>
         </form>
@@ -186,29 +204,40 @@ export function CarritoPage() {
       </Card>
 
       <Card className={styles.section}>
+        <div className={styles.cardHeader}>
+          <span className={styles.stepLabel}>Paso 3</span>
+          <h2 className={styles.cardTitle}>Carrito</h2>
+        </div>
         {lineas.length === 0 ? (
           <EmptyState
             title="El carrito está vacío"
             description="Agregá al menos un producto para poder registrar la venta."
           />
         ) : (
-          <>
-            <Table columns={columns} rows={lineas} getRowKey={(l) => l.producto.idProducto} />
-            <div className={styles.total}>Total: {formatearMoneda(total)}</div>
-          </>
+          <Table columns={columns} rows={lineas} getRowKey={(l) => l.producto.idProducto} />
         )}
       </Card>
 
-      {errorEnvio && (
-        <p role="alert" className={styles.error}>
-          {errorEnvio}
-        </p>
-      )}
-
-      <div className={styles.actions}>
-        <Button onClick={handleConfirmar} disabled={!puedeConfirmar} loading={enviando}>
-          Confirmar venta
-        </Button>
+      <div className={styles.footer}>
+        {errorEnvio && (
+          <p role="alert" className={styles.error}>
+            {errorEnvio}
+          </p>
+        )}
+        <div className={styles.footerRow}>
+          <div className={styles.totalBlock}>
+            <span className={styles.totalLabel}>Total</span>
+            <span className={styles.totalValue}>{formatearMoneda(total)}</span>
+          </div>
+          <div className={styles.confirmBlock}>
+            {!puedeConfirmar && !enviando && (
+              <span className={styles.footerHint}>{motivoBloqueo}</span>
+            )}
+            <Button onClick={handleConfirmar} disabled={!puedeConfirmar} loading={enviando}>
+              Confirmar venta
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

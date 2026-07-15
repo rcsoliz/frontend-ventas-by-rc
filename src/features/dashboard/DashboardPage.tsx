@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/Button";
+import { Card } from "../../components/Card";
 import { EmptyState } from "../../components/EmptyState";
 import { Select } from "../../components/Select";
 import { Skeleton } from "../../components/Skeleton";
@@ -11,10 +12,14 @@ import { extraerMensajeError } from "../../graphql/errors";
 import { formatearMoneda } from "../../format";
 import { RANGOS, construirDashboardData } from "./aggregate";
 import type { RangoFecha, PuntoIngreso, ProductoTop, VendedorVentas, Venta } from "./aggregate";
+import { construirCsvIngresosPorDia, descargarArchivo } from "./exportCsv";
 import { StatTile } from "./charts/StatTile";
 import { LineChart } from "./charts/LineChart";
 import { BarChart } from "./charts/BarChart";
 import { ChartCard } from "./charts/ChartCard";
+import { RecentSales } from "./charts/RecentSales";
+import { InsightCard } from "./charts/InsightCard";
+import { IconBillete, IconCarrito, IconTicket, IconCaja, IconDescarga } from "./icons";
 import styles from "./DashboardPage.module.css";
 
 function formatearFechaCorta(fecha: string): string {
@@ -39,6 +44,11 @@ export function DashboardPage() {
 
   const dashboard = useMemo(() => construirDashboardData(ventas, rango), [ventas, rango]);
 
+  function exportarIngresos() {
+    const csv = construirCsvIngresosPorDia(dashboard.ingresosPorDia);
+    descargarArchivo(`ingresos-${rango}.csv`, csv);
+  }
+
   const columnasIngresos: TableColumn<PuntoIngreso>[] = [
     { key: "fecha", header: "Fecha", render: (p) => formatearFechaCorta(p.fecha) },
     { key: "total", header: "Ingresos", align: "right", render: (p) => formatearMoneda(p.total) },
@@ -56,25 +66,42 @@ export function DashboardPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <h1>Panel</h1>
-      </div>
-
-      {!loading && !error && ventas.length > 0 && (
-        <div className={styles.filters}>
-          <Select
-            label="Período"
-            value={rango}
-            onChange={(e) => setRango(e.target.value as RangoFecha)}
-          >
-            {RANGOS.map((r) => (
-              <option key={r.value} value={r.value}>
-                {r.label}
-              </option>
-            ))}
-          </Select>
+      <div className={styles.headerRow}>
+        <div className={styles.header}>
+          <h1>Panel</h1>
+          <nav className={styles.breadcrumb} aria-label="Ruta de navegación">
+            <span>Gestión</span>
+            <span aria-hidden="true" className={styles.breadcrumbSep}>
+              ›
+            </span>
+            <span className={styles.breadcrumbCurrent}>Resumen de Ventas</span>
+          </nav>
         </div>
-      )}
+
+        {!loading && !error && ventas.length > 0 && (
+          <div className={styles.filters}>
+            <Select
+              label="Período"
+              value={rango}
+              onChange={(e) => setRango(e.target.value as RangoFecha)}
+            >
+              {RANGOS.map((r) => (
+                <option key={r.value} value={r.value}>
+                  {r.label}
+                </option>
+              ))}
+            </Select>
+            <Button
+              variant="secondary"
+              onClick={exportarIngresos}
+              disabled={dashboard.ingresosPorDia.length === 0}
+            >
+              <IconDescarga className={styles.buttonIcon} />
+              Exportar
+            </Button>
+          </div>
+        )}
+      </div>
 
       {loading && (
         <div className={styles.skeletonGrid}>
@@ -130,21 +157,25 @@ export function DashboardPage() {
               label="Ingresos totales"
               value={formatearMoneda(dashboard.kpis.ingresosTotales)}
               delta={dashboard.kpis.deltaIngresos}
+              icon={<IconBillete />}
             />
             <StatTile
               testId="kpi-cantidad-ventas"
               label="Ventas registradas"
               value={formatearNumero(dashboard.kpis.cantidadVentas)}
+              icon={<IconCarrito />}
             />
             <StatTile
               testId="kpi-ticket-promedio"
               label="Ticket promedio"
               value={formatearMoneda(dashboard.kpis.ticketPromedio)}
+              icon={<IconTicket />}
             />
             <StatTile
               testId="kpi-unidades-vendidas"
               label="Unidades vendidas"
               value={formatearNumero(dashboard.kpis.unidadesVendidas)}
+              icon={<IconCaja />}
             />
           </div>
 
@@ -167,6 +198,24 @@ export function DashboardPage() {
               />
             )}
           </ChartCard>
+
+          <div
+            className={[styles.secondaryGrid, !dashboard.insightTopProducto && styles.secondaryGridSingle]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            <Card>
+              <h2 className={styles.cardTitle}>Ventas Recientes</h2>
+              <RecentSales ventas={dashboard.ventasRecientes} formatearMoneda={formatearMoneda} />
+            </Card>
+
+            {dashboard.insightTopProducto && (
+              <InsightCard
+                nombreProducto={dashboard.insightTopProducto.nombre}
+                porcentaje={dashboard.insightTopProducto.porcentaje}
+              />
+            )}
+          </div>
 
           <div className={styles.chartsRow}>
             <ChartCard
@@ -223,6 +272,26 @@ export function DashboardPage() {
           </div>
         </>
       )}
+
+      {!loading && !error && ventas.length > 0 && (
+        <button
+          type="button"
+          className={styles.fab}
+          aria-label="Nueva venta"
+          onClick={() => navigate("/ventas/nueva")}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          <span className={styles.fabTooltip} aria-hidden="true">
+            Nueva Venta
+          </span>
+        </button>
+      )}
+
+      <footer className={styles.footer}>
+        © {new Date().getFullYear()} Ventas - Sistema de Gestión Comercial. Todos los derechos reservados.
+      </footer>
     </div>
   );
 }

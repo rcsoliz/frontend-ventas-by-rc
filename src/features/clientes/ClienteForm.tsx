@@ -87,28 +87,38 @@ export function ClienteForm({ cliente, onSuccess, onCancel }: ClienteFormProps) 
 
   return (
     <form onSubmit={handleSubmit} className={styles.form} noValidate>
-      <Input
-        label="Nombre"
-        autoComplete="given-name"
-        value={nombre}
-        onChange={(e) => {
-          setNombre(e.target.value);
-          limpiarError("nombre");
-        }}
-        error={errores.nombre}
-        required
-      />
-      <Input
-        label="Apellido"
-        autoComplete="family-name"
-        value={apellido}
-        onChange={(e) => {
-          setApellido(e.target.value);
-          limpiarError("apellido");
-        }}
-        error={errores.apellido}
-        required
-      />
+      {cliente && (
+        <p className={styles.editingContext}>
+          Editando a{" "}
+          <strong>
+            {cliente.nombre} {cliente.apellido}
+          </strong>
+        </p>
+      )}
+      <div className={styles.row}>
+        <Input
+          label="Nombre"
+          autoComplete="given-name"
+          value={nombre}
+          onChange={(e) => {
+            setNombre(e.target.value);
+            limpiarError("nombre");
+          }}
+          error={errores.nombre}
+          required
+        />
+        <Input
+          label="Apellido"
+          autoComplete="family-name"
+          value={apellido}
+          onChange={(e) => {
+            setApellido(e.target.value);
+            limpiarError("apellido");
+          }}
+          error={errores.apellido}
+          required
+        />
+      </div>
       <Input
         label="Correo"
         type="email"

@@ -44,12 +44,28 @@ export interface DashboardKpis {
   deltaIngresos: number | null;
 }
 
+/** Fila de la sección "Ventas Recientes" del panel — datos reales, sin campos inventados (no hay número de factura en el schema). */
+export interface VentaReciente {
+  idVenta: string;
+  clienteNombre: string;
+  fechaVenta: string;
+  total: number;
+}
+
+/** Insight calculado a partir del producto más vendido — reemplaza el "Top Categorías" del mockup, que no tiene sustento en el schema (no existe categoría de producto). */
+export interface InsightTopProducto {
+  nombre: string;
+  porcentaje: number;
+}
+
 export interface DashboardData {
   ventasEnRango: Venta[];
   kpis: DashboardKpis;
   ingresosPorDia: PuntoIngreso[];
   topProductos: ProductoTop[];
   ventasPorVendedor: VendedorVentas[];
+  ventasRecientes: VentaReciente[];
+  insightTopProducto: InsightTopProducto | null;
 }
 
 function fechaVentaAMs(venta: Venta): number {
@@ -164,6 +180,65 @@ export function calcularVentasPorVendedor(ventas: Venta[], limite = 8): Vendedor
     .slice(0, limite);
 }
 
+/** Últimas `limite` ventas del período, más recientes primero — para la sección "Ventas Recientes" del panel. */
+export function calcularVentasRecientes(ventas: Venta[], limite = 5): VentaReciente[] {
+  return [...ventas]
+    .filter((v) => v.fechaVenta)
+    .sort((a, b) => fechaVentaAMs(b) - fechaVentaAMs(a))
+    .slice(0, limite)
+    .map((v) => ({
+      idVenta: v.idVenta,
+      clienteNombre: v.cliente.nombreCompleto,
+      fechaVenta: String(v.fechaVenta),
+      total: Number(v.total),
+    }));
+}
+
+/**
+ * Insight real derivado del producto más vendido (reemplaza el "Top Categorías"
+ * del mockup, que no existe en el schema). `null` si no hay productos o
+ * ingresos en el período — evita mostrar un porcentaje sin sentido (división por cero).
+ */
+export function calcularInsightTopProducto(
+  topProductos: ProductoTop[],
+  ingresosTotales: number
+): InsightTopProducto | null {
+  const top = topProductos[0];
+  if (!top || ingresosTotales <= 0) return null;
+  return { nombre: top.nombre, porcentaje: (top.ingresos / ingresosTotales) * 100 };
+}
+
+const MINUTO_MS = 60_000;
+const HORA_MS = 60 * MINUTO_MS;
+const DIA_MS = 24 * HORA_MS;
+
+/** Tiempo relativo en español ("Hace 2 horas", "Ayer", "Hace 3 días"...) para la lista de ventas recientes. */
+export function formatearTiempoRelativo(fechaIso: string, ahora: Date = new Date()): string {
+  const ms = ahora.getTime() - new Date(fechaIso).getTime();
+  if (ms < MINUTO_MS) return "Hace un momento";
+  if (ms < HORA_MS) {
+    const minutos = Math.floor(ms / MINUTO_MS);
+    return `Hace ${minutos} min`;
+  }
+  if (ms < DIA_MS) {
+    const horas = Math.floor(ms / HORA_MS);
+    return `Hace ${horas} ${horas === 1 ? "hora" : "horas"}`;
+  }
+  const dias = Math.floor(ms / DIA_MS);
+  if (dias === 1) return "Ayer";
+  if (dias < 7) return `Hace ${dias} días`;
+  if (dias < 30) {
+    const semanas = Math.floor(dias / 7);
+    return `Hace ${semanas} ${semanas === 1 ? "semana" : "semanas"}`;
+  }
+  if (dias < 365) {
+    const meses = Math.floor(dias / 30);
+    return `Hace ${meses} ${meses === 1 ? "mes" : "meses"}`;
+  }
+  const anios = Math.floor(dias / 365);
+  return `Hace ${anios} ${anios === 1 ? "año" : "años"}`;
+}
+
 export function construirDashboardData(
   ventas: Venta[],
   rango: RangoFecha,
@@ -171,11 +246,15 @@ export function construirDashboardData(
 ): DashboardData {
   const ventasEnRango = filtrarPorRango(ventas, rango, ahora);
   const anteriores = ventasPeriodoAnterior(ventas, rango, ahora);
+  const kpis = calcularKpis(ventasEnRango, anteriores);
+  const topProductos = calcularTopProductos(ventasEnRango);
   return {
     ventasEnRango,
-    kpis: calcularKpis(ventasEnRango, anteriores),
+    kpis,
     ingresosPorDia: agruparIngresosPorDia(ventasEnRango),
-    topProductos: calcularTopProductos(ventasEnRango),
+    topProductos,
     ventasPorVendedor: calcularVentasPorVendedor(ventasEnRango),
+    ventasRecientes: calcularVentasRecientes(ventasEnRango),
+    insightTopProducto: calcularInsightTopProducto(topProductos, kpis.ingresosTotales),
   };
 }

@@ -2,6 +2,7 @@
   overflow-x: auto;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
   /* Scroll-shadow cue: two solid gradients mask the edges (scroll with content),
      two shadow gradients sit above them (fixed to the viewport). Both fade out
      once there's nothing left to scroll to on that side, so the cue only shows

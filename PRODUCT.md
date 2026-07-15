@@ -22,11 +22,11 @@ Un sistema hecho a medida del flujo real de este negocio: simple donde una plani
 
 ## Brand Personality
 
-Sobrio, confiable, directo. Una herramienta de trabajo seria pero no fría — sin adornos ni personalidad juguetona. Ya expresado en la paleta monocromática cálida (`minimalist-ui`) de `src/design-system/tokens.css`: el color es un recurso escaso, sombras casi inexistentes, radios acotados.
+*(Actualizado 2026-07-14 — ver nota de versión en `DESIGN.md` §0)* Profesional y confiable, con un look de panel SaaS claro adoptado desde mockups de Stitch (`public/img/`): fondo azulado pálido, cards con sombra suave real, badges de color en pastilla para comunicar estado. El negro (`--color-primary`) sigue reservado a la acción principal de cada pantalla — eso no cambió — pero el color ya no es un recurso escaso: se usa activamente para jerarquía (azul en enlaces/metadatos) y estado (verde/ámbar/rojo en badges). Ver `DESIGN.md` para el sistema completo.
 
 ## Anti-references
 
-Ni estética de "ERP de escritorio" anticuada (tablas densísimas sin jerarquía, iconos genéricos, aspecto tipo Windows XP) ni el cliché "SaaS 2024" (gradientes, hero-metrics, tarjetas de KPI idénticas, eyebrows en mayúscula sobre cada sección).
+Estética de "ERP de escritorio" anticuada (tablas densísimas sin jerarquía, iconos genéricos, aspecto tipo Windows XP) y gradientes/glassmorphism decorativos. **Ya no aplica** (revertido 2026-07-14) el rechazo al patrón "SaaS 2024" de KPI cards y color de estado — es exactamente la dirección adoptada en `DESIGN.md` v2, a pedido explícito del usuario a partir de mockups de Stitch.
 
 ## Design Principles
 
@@ -34,11 +34,11 @@ El flujo de negocio manda sobre la estética: clientes → productos → venta �
 
 Las reglas de negocio se muestran en la interfaz, no solo se validan en el backend: permisos por rol, stock, duplicados se anticipan visualmente antes de que el usuario choque con un error.
 
-Sobriedad como default: color como recurso escaso, casi todo resuelto en gris cálido más un acento mínimo, sin sombras pesadas.
+Claridad como default: superficie azulada pálida, cards con sombra suave real, color usado activamente para jerarquía y estado (ver `DESIGN.md` v2) — ya no "sobriedad monocromática" (v1, derogada).
 
 Rápido para vender, preciso para administrar: ambos roles conviven en el mismo sistema sin que el flujo de uno estorbe al del otro.
 
-Cero decoración sin función: nada de gradientes, glassmorphism o motion gratuito — cada elemento visual justifica su lugar.
+Decoración con función: cada badge/color/sombra comunica estado o jerarquía real — se evitan gradientes y motion gratuito, pero ya no se evita el color o la sombra en sí.
 
 ## Accessibility & Inclusion
 

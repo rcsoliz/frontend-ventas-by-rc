@@ -3,21 +3,29 @@
   min-height: 100vh;
 }
 
+/* Topbar mobile: hamburguesa + marca. Oculto en desktop (ver .desktopTopbar). */
 .topbar {
   display: none;
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--color-border);
   background: var(--color-surface);
+  box-shadow: var(--shadow-md);
   position: sticky;
   top: 0;
   z-index: 50;
 }
 
+.topbarBrandGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
 .topbarBrand {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
+  line-height: normal;
 }
 
 .menuButton {
@@ -36,7 +44,7 @@
 }
 
 .menuButton:hover {
-  background: var(--color-border);
+  background: var(--color-bg);
 }
 
 .overlay {
@@ -60,9 +68,44 @@
   margin-bottom: var(--space-6);
 }
 
-.brand {
-  font-size: 16px;
+.brandGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+/* Marca: cuadrado negro + ícono, igual en sidebar y topbar mobile. */
+.brandMark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+}
+
+.brandTextGroup {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.brandTitle {
+  font-size: 18px;
   font-weight: 600;
+  line-height: normal;
+  color: var(--color-text);
+}
+
+.brandSubtitle {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--color-text-subtle);
 }
 
 .closeButton {
@@ -71,6 +114,7 @@
   justify-content: center;
   width: 32px;
   height: 32px;
+  flex-shrink: 0;
   border: none;
   background: transparent;
   border-radius: var(--radius-sm);
@@ -91,6 +135,9 @@
 }
 
 .navLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-sm);
   font-size: 14px;
@@ -99,6 +146,10 @@
   text-decoration: none;
   transition: background-color var(--duration-fast) var(--ease-out),
     color var(--duration-fast) var(--ease-out);
+}
+
+.navLink svg {
+  flex-shrink: 0;
 }
 
 .navLink:hover {
@@ -120,29 +171,178 @@
   border-top: 1px solid var(--color-border);
   padding-top: var(--space-4);
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: var(--space-3);
 }
 
-.user {
+/* Avatar circular compartido (sidebar y topbar): iniciales, sin foto real. */
+.avatarCircle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.userTextGroup {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  flex: 1;
 }
 
 .userName {
   font-size: 13px;
   font-weight: 500;
+  line-height: 18px;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .userRole {
   font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
   color: var(--color-text-subtle);
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-full);
+  color: var(--color-text-subtle);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.logoutButton:hover {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+/* Columna derecha: topbar desktop + contenido, junto al sidebar fijo. */
+.main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Topbar desktop (buscador, notificaciones, settings, avatar). Ver Dashboard.png. */
+.desktopTopbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-6);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.searchField {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  max-width: 420px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-accent-bg);
+  border: 1px solid transparent;
+  color: var(--color-text-subtle);
+  transition: border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.searchField:focus-within {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+.searchField svg {
+  flex-shrink: 0;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--color-text);
+}
+
+.searchInput::placeholder {
+  color: var(--color-text-subtle);
+}
+
+.topbarActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+/* Notificaciones y settings son decorativos por ahora: no hay backend detrás. */
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-full);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.iconButton:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
 .content {
   flex: 1;
   padding: var(--space-6) var(--space-7);
   min-width: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 @media (max-width: 768px) {
@@ -154,6 +354,10 @@
     display: flex;
   }
 
+  .desktopTopbar {
+    display: none;
+  }
+
   .closeButton {
     display: flex;
   }
@@ -162,6 +366,9 @@
     display: block;
     position: fixed;
     inset: 0;
+    /* Scrim del drawer mobile: negro translúcido estándar, no una superficie
+       del sistema de color (bg/surface/border) — se mantiene fuera de la
+       paleta de DESIGN.md a propósito. */
     background: rgba(0, 0, 0, 0.4);
     z-index: 100;
     opacity: 0;

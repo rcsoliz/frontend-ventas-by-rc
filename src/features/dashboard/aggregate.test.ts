@@ -5,6 +5,9 @@ import {
   agruparIngresosPorDia,
   calcularTopProductos,
   calcularVentasPorVendedor,
+  calcularVentasRecientes,
+  calcularInsightTopProducto,
+  formatearTiempoRelativo,
   construirDashboardData,
 } from "./aggregate";
 import type { Venta } from "./aggregate";
@@ -135,6 +138,51 @@ describe("calcularVentasPorVendedor", () => {
     const resultado = calcularVentasPorVendedor(ventas);
     expect(resultado[0]).toMatchObject({ idVendedor: "vd2", total: 300, cantidadVentas: 1 });
     expect(resultado[1]).toMatchObject({ idVendedor: "vd1", total: 150, cantidadVentas: 2 });
+  });
+});
+
+describe("calcularVentasRecientes", () => {
+  it("ordena por fecha descendente y respeta el límite", () => {
+    const ventas = [
+      crearVenta({ idVenta: "vieja", fechaVenta: "2026-07-01T00:00:00Z", total: "10" }),
+      crearVenta({ idVenta: "reciente", fechaVenta: "2026-07-13T00:00:00Z", total: "20" }),
+      crearVenta({ idVenta: "media", fechaVenta: "2026-07-10T00:00:00Z", total: "30" }),
+    ];
+    const resultado = calcularVentasRecientes(ventas, 2);
+    expect(resultado.map((v) => v.idVenta)).toEqual(["reciente", "media"]);
+    expect(resultado[0]).toMatchObject({ clienteNombre: "Cliente 1", total: 20 });
+  });
+});
+
+describe("calcularInsightTopProducto", () => {
+  it("calcula el porcentaje de ingresos del producto más vendido", () => {
+    const top = calcularInsightTopProducto(
+      [{ idProducto: "p1", nombre: "Laptop", cantidad: 2, ingresos: 300 }],
+      1000
+    );
+    expect(top).toEqual({ nombre: "Laptop", porcentaje: 30 });
+  });
+
+  it("retorna null sin productos o sin ingresos", () => {
+    expect(calcularInsightTopProducto([], 1000)).toBeNull();
+    expect(
+      calcularInsightTopProducto([{ idProducto: "p1", nombre: "Laptop", cantidad: 1, ingresos: 100 }], 0)
+    ).toBeNull();
+  });
+});
+
+describe("formatearTiempoRelativo", () => {
+  it.each([
+    ["2026-07-14T11:59:30Z", "Hace un momento"],
+    ["2026-07-14T11:30:00Z", "Hace 30 min"],
+    ["2026-07-14T10:00:00Z", "Hace 2 horas"],
+    ["2026-07-13T12:00:00Z", "Ayer"],
+    ["2026-07-10T12:00:00Z", "Hace 4 días"],
+    ["2026-07-01T12:00:00Z", "Hace 1 semana"],
+    ["2026-06-01T12:00:00Z", "Hace 1 mes"],
+    ["2025-01-01T12:00:00Z", "Hace 1 año"],
+  ])("%s -> %s", (fecha, esperado) => {
+    expect(formatearTiempoRelativo(fecha, AHORA)).toBe(esperado);
   });
 });
 

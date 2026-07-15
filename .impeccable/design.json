@@ -1,86 +1,101 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-12T00:00:00.000Z",
-  "title": "Design System: Ventas",
+  "generatedAt": "2026-07-14T00:00:00.000Z",
+  "title": "Design System: Ventas (v2 — Clarity)",
   "extensions": {
     "colorMeta": {
-      "ink": {
+      "primary": {
         "role": "primary",
-        "displayName": "Tinta Casi Negra",
+        "displayName": "Negro de Acción",
         "canonical": "#111111",
-        "tonalRamp": ["#0a0a0a", "#111111", "#1e1e1e", "#333333", "#5f5e5b", "#918f8a", "#dcdad5", "#f7f6f3"]
+        "tonalRamp": ["#111111", "#2d2d2d", "#64748b", "#94a3b8", "#d6dbec", "#e6e9f4", "#f4f6fb", "#ffffff"]
       },
-      "ink-hover": {
+      "primary-hover": {
         "role": "primary-hover",
-        "displayName": "Tinta Suave",
-        "canonical": "#333333"
+        "displayName": "Negro Hover",
+        "canonical": "#2d2d2d"
       },
-      "paper": {
+      "bg": {
         "role": "neutral-bg",
-        "displayName": "Papel Cálido",
-        "canonical": "#f7f6f3",
-        "tonalRamp": ["#111111", "#333333", "#5f5e5b", "#918f8a", "#dcdad5", "#eaeaea", "#f7f6f3", "#ffffff"]
+        "displayName": "Fondo Azulado Pálido",
+        "canonical": "#f4f6fb"
       },
       "surface": {
         "role": "neutral-surface",
         "displayName": "Blanco Limpio",
         "canonical": "#ffffff"
       },
-      "hairline": {
+      "border": {
         "role": "neutral-border",
-        "displayName": "Gris Línea Fina",
-        "canonical": "#eaeaea"
+        "displayName": "Borde Azulado Fino",
+        "canonical": "#e6e9f4"
       },
-      "hairline-strong": {
+      "border-strong": {
         "role": "neutral-border-strong",
-        "displayName": "Gris Línea Firme",
-        "canonical": "#dcdad5"
+        "displayName": "Borde Azulado Firme",
+        "canonical": "#d6dbec"
       },
       "text-muted": {
         "role": "neutral-text-muted",
         "displayName": "Gris Texto Apagado",
-        "canonical": "#5f5e5b"
+        "canonical": "#64748b"
       },
       "text-subtle": {
         "role": "neutral-text-subtle",
         "displayName": "Gris Texto Sutil",
-        "canonical": "#918f8a"
+        "canonical": "#94a3b8"
       },
-      "brick": {
+      "accent": {
+        "role": "accent",
+        "displayName": "Azul Informativo",
+        "canonical": "#2563eb",
+        "tonalRamp": ["#1e3a8a", "#1d4ed8", "#2563eb", "#3b82f6", "#93c5fd", "#c7d9fb", "#eff4ff"]
+      },
+      "accent-bg": { "role": "accent-bg", "displayName": "Azul Pálido", "canonical": "#eff4ff" },
+      "accent-border": { "role": "accent-border", "displayName": "Azul Borde", "canonical": "#c7d9fb" },
+      "danger": {
         "role": "danger",
-        "displayName": "Ladrillo Apagado",
-        "canonical": "#9f2f2d",
-        "tonalRamp": ["#3d1211", "#5c1b19", "#7a2422", "#9f2f2d", "#c25a58", "#dd8b89", "#f3d2d1", "#fdebec"]
+        "displayName": "Rojo Error",
+        "canonical": "#dc2626",
+        "tonalRamp": ["#7f1d1d", "#991b1b", "#dc2626", "#ef4444", "#fca5a5", "#fecaca", "#fee2e2"]
       },
-      "brick-bg": { "role": "danger-bg", "displayName": "Rosa Ladrillo Pálido", "canonical": "#fdebec" },
-      "brick-border": { "role": "danger-border", "displayName": "Rosa Ladrillo", "canonical": "#f3d2d1" },
-      "forest": {
+      "danger-bg": { "role": "danger-bg", "displayName": "Rojo Pálido", "canonical": "#fee2e2" },
+      "danger-border": { "role": "danger-border", "displayName": "Rojo Borde", "canonical": "#fecaca" },
+      "success": {
         "role": "success",
-        "displayName": "Verde Bosque Profundo",
-        "canonical": "#346538",
-        "tonalRamp": ["#142715", "#1f3a21", "#284d2b", "#346538", "#5c8d5f", "#8fbf90", "#cfe3cd", "#edf3ec"]
+        "displayName": "Verde Éxito",
+        "canonical": "#16a34a",
+        "tonalRamp": ["#14532d", "#166534", "#16a34a", "#22c55e", "#86efac", "#bbf7d0", "#dcfce7"]
       },
-      "forest-bg": { "role": "success-bg", "displayName": "Verde Musgo Pálido", "canonical": "#edf3ec" },
-      "forest-border": { "role": "success-border", "displayName": "Verde Musgo", "canonical": "#cfe3cd" }
+      "success-bg": { "role": "success-bg", "displayName": "Verde Pálido", "canonical": "#dcfce7" },
+      "success-border": { "role": "success-border", "displayName": "Verde Borde", "canonical": "#bbf7d0" },
+      "warning": {
+        "role": "warning",
+        "displayName": "Ámbar Advertencia",
+        "canonical": "#d97706",
+        "tonalRamp": ["#78350f", "#92400e", "#d97706", "#f59e0b", "#fcd34d", "#fde68a", "#fef3c7"]
+      },
+      "warning-bg": { "role": "warning-bg", "displayName": "Ámbar Pálido", "canonical": "#fef3c7" },
+      "warning-border": { "role": "warning-border", "displayName": "Ámbar Borde", "canonical": "#fde68a" }
     },
     "typographyMeta": {
-      "page-title": { "displayName": "Page Title", "purpose": "h1 de cada pantalla (Ventas, Clientes, Productos, Nueva venta, Detalle de venta). El tamaño más grande del sistema (20px)." },
-      "title": { "displayName": "Title", "purpose": "Título de modal, marca del sidebar (16px)." },
+      "page-title": { "displayName": "Page Title", "purpose": "h1 de cada pantalla (Panel, Ventas, Clientes, Productos). 28px/700 — subió respecto a v1 (20px), Stitch usa tamaño como jerarquía." },
+      "title": { "displayName": "Title", "purpose": "Título de card/sección (\"Ingresos por día\"), título de modal. 18px/600." },
       "body": { "displayName": "Body", "purpose": "Texto de tabla, inputs, botones md, contenido general." },
-      "label": { "displayName": "Label", "purpose": "Labels de formulario, botones sm, metadatos de usuario." },
-      "caption": { "displayName": "Caption", "purpose": "Encabezados de tabla, rol de usuario, hints (12px, uppercase, letter-spacing 0.03em) — único uso de mayúsculas + tracking del sistema, reservado a metadatos, nunca a contenido de negocio." }
+      "label": { "displayName": "Label", "purpose": "Labels de formulario, botones sm, texto de badge." },
+      "caption": { "displayName": "Caption", "purpose": "Encabezados de tabla (12px, uppercase, letter-spacing 0.03em) — igual que v1, Stitch también usa este patrón en headers de tabla." }
     },
     "shadows": [
-      { "name": "ambient", "value": "0 1px 2px rgba(17, 17, 17, 0.03)", "purpose": "Cards en reposo, casi imperceptible." },
-      { "name": "floating", "value": "0 2px 8px rgba(17, 17, 17, 0.04)", "purpose": "Toast, separación suave sobre la página." },
-      { "name": "overlaid", "value": "0 8px 28px rgba(17, 17, 17, 0.08)", "purpose": "Modal, la única sombra realmente perceptible del sistema." }
+      { "name": "sm", "value": "0 1px 2px rgba(16, 24, 40, 0.05)", "purpose": "Inputs, filas de tabla." },
+      { "name": "md", "value": "0 4px 8px rgba(16, 24, 40, 0.06), 0 2px 4px rgba(16, 24, 40, 0.04)", "purpose": "Cards de KPI, topbar, card de login — elevación por defecto de v2 (v1 la reservaba solo para overlays)." },
+      { "name": "lg", "value": "0 12px 24px rgba(16, 24, 40, 0.1)", "purpose": "Modal, FAB, dropdown/menú kebab." }
     ],
     "motion": [
       { "name": "ease-out", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Easing por defecto para hovers, focus y entradas." },
       { "name": "ease-in-out", "value": "cubic-bezier(0.77, 0, 0.175, 1)", "purpose": "Transiciones simétricas (poco usadas)." },
       { "name": "duration-fast", "value": "140ms", "purpose": "Hover, focus, press." },
-      { "name": "duration-base", "value": "200ms", "purpose": "Entradas de Modal, Toast." },
-      { "name": "press-scale", "value": "scale(0.97)", "purpose": "Único gesto de movimiento en botones, on :active." }
+      { "name": "duration-base", "value": "200ms", "purpose": "Entradas de Modal, Toast, dropdown." },
+      { "name": "press-scale", "value": "scale(0.97)", "purpose": "Gesto de compresión en botones, on :active — se mantiene de v1." }
     ],
     "breakpoints": [
       { "name": "mobile", "value": "720px" }
@@ -91,41 +106,49 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Acción principal de una pantalla (confirmar venta, crear cliente/producto).",
+      "description": "Acción principal de una pantalla (confirmar venta, crear cliente/producto, ingresar).",
       "html": "<button class=\"ds-btn-primary\">Registrar venta</button>",
-      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 14px; line-height: 20px; padding: 8px 16px; border-radius: 6px; border: 1px solid transparent; background: #111111; color: #ffffff; cursor: pointer; transition: background-color 140ms cubic-bezier(0.23,1,0.32,1), transform 140ms cubic-bezier(0.23,1,0.32,1); } .ds-btn-primary:hover { background: #333333; } .ds-btn-primary:active { transform: scale(0.97); } .ds-btn-primary:focus-visible { outline: 2px solid rgba(17,17,17,0.35); outline-offset: 2px; }"
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 14px; line-height: 20px; padding: 10px 18px; border-radius: 8px; border: 1px solid transparent; background: #111111; color: #ffffff; cursor: pointer; transition: background-color 140ms cubic-bezier(0.23,1,0.32,1), transform 140ms cubic-bezier(0.23,1,0.32,1); } .ds-btn-primary:hover { background: #2d2d2d; } .ds-btn-primary:active { transform: scale(0.97); } .ds-btn-primary:focus-visible { outline: 2px solid rgba(37,99,235,0.35); outline-offset: 2px; }"
     },
     {
       "name": "Secondary Button",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Acción alternativa junto a un botón primario (cancelar, volver).",
-      "html": "<button class=\"ds-btn-secondary\">Cancelar</button>",
-      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 14px; line-height: 20px; padding: 8px 16px; border-radius: 6px; border: 1px solid #dcdad5; background: #ffffff; color: #111111; cursor: pointer; transition: border-color 140ms cubic-bezier(0.23,1,0.32,1); } .ds-btn-secondary:hover { border-color: #918f8a; } .ds-btn-secondary:active { transform: scale(0.97); }"
+      "description": "Acción alternativa junto a un botón primario (cancelar, editar, filtrar).",
+      "html": "<button class=\"ds-btn-secondary\">Editar</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 14px; line-height: 20px; padding: 10px 18px; border-radius: 8px; border: 1px solid #d6dbec; background: #ffffff; color: #111827; cursor: pointer; transition: border-color 140ms cubic-bezier(0.23,1,0.32,1); } .ds-btn-secondary:hover { border-color: #94a3b8; } .ds-btn-secondary:active { transform: scale(0.97); }"
     },
     {
       "name": "Danger Button",
       "kind": "button",
       "refersTo": "button-danger",
-      "description": "Acción destructiva o de alto riesgo (eliminar, desactivar).",
+      "description": "Acción destructiva o de alto riesgo (desactivar).",
       "html": "<button class=\"ds-btn-danger\">Desactivar</button>",
-      "css": ".ds-btn-danger { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 14px; line-height: 20px; padding: 8px 16px; border-radius: 6px; border: 1px solid transparent; background: #9f2f2d; color: #ffffff; cursor: pointer; transition: filter 140ms cubic-bezier(0.23,1,0.32,1); } .ds-btn-danger:hover { filter: brightness(0.92); } .ds-btn-danger:active { transform: scale(0.97); }"
+      "css": ".ds-btn-danger { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; font-size: 14px; line-height: 20px; padding: 10px 18px; border-radius: 8px; border: 1px solid transparent; background: #dc2626; color: #ffffff; cursor: pointer; transition: filter 140ms cubic-bezier(0.23,1,0.32,1); } .ds-btn-danger:hover { filter: brightness(0.92); } .ds-btn-danger:active { transform: scale(0.97); }"
     },
     {
       "name": "Text Input",
       "kind": "input",
       "refersTo": "input",
-      "description": "Campo de texto de formulario (cliente, producto, venta).",
+      "description": "Campo de texto de formulario, opcionalmente con icono a la izquierda (ver Login).",
       "html": "<div class=\"ds-field\"><label class=\"ds-label\">Correo</label><input class=\"ds-input\" type=\"email\" placeholder=\"cliente@correo.com\" /></div>",
-      "css": ".ds-field { display: flex; flex-direction: column; gap: 4px; } .ds-label { font-size: 13px; font-weight: 500; color: #5f5e5b; } .ds-input { font-size: 14px; padding: 8px 12px; border-radius: 6px; border: 1px solid #dcdad5; background: #ffffff; color: #111111; transition: border-color 140ms cubic-bezier(0.23,1,0.32,1), box-shadow 140ms cubic-bezier(0.23,1,0.32,1); } .ds-input:hover { border-color: #918f8a; } .ds-input:focus-visible { outline: none; border-color: #111111; box-shadow: 0 0 0 3px rgba(17,17,17,0.35); }"
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 4px; } .ds-label { font-size: 13px; font-weight: 500; color: #64748b; } .ds-input { font-size: 14px; padding: 10px 12px; border-radius: 8px; border: 1px solid #d6dbec; background: #ffffff; color: #111827; transition: border-color 140ms cubic-bezier(0.23,1,0.32,1), box-shadow 140ms cubic-bezier(0.23,1,0.32,1); } .ds-input:hover { border-color: #94a3b8; } .ds-input:focus-visible { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.35); }"
     },
     {
       "name": "Card",
       "kind": "card",
       "refersTo": "card",
-      "description": "Contenedor de superficie elevada un nivel sobre el papel de fondo.",
+      "description": "Contenedor de superficie elevada con sombra suave real (v2: ya no casi-invisible como v1).",
       "html": "<div class=\"ds-card\">Contenido</div>",
-      "css": ".ds-card { background: #ffffff; border: 1px solid #eaeaea; border-radius: 10px; box-shadow: 0 1px 2px rgba(17,17,17,0.03); padding: 24px; }"
+      "css": ".ds-card { background: #ffffff; border: 1px solid #e6e9f4; border-radius: 12px; box-shadow: 0 4px 8px rgba(16,24,40,0.06), 0 2px 4px rgba(16,24,40,0.04); padding: 24px; }"
+    },
+    {
+      "name": "Status Badge",
+      "kind": "custom",
+      "refersTo": "badge",
+      "description": "Pastilla de estado (KPI ▲/▼, stock, rol) — trío fondo pálido/borde/texto del color correspondiente. Nuevo en v2, reemplaza el texto plano de color de v1.",
+      "html": "<span class=\"ds-badge ds-badge--success\">▲ 100.0%</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; padding: 2px 10px; border-radius: 999px; border: 1px solid transparent; } .ds-badge--success { background: #dcfce7; color: #16a34a; border-color: #bbf7d0; } .ds-badge--warning { background: #fef3c7; color: #d97706; border-color: #fde68a; } .ds-badge--danger { background: #fee2e2; color: #dc2626; border-color: #fecaca; }"
     },
     {
       "name": "Table Row",
@@ -133,7 +156,7 @@
       "refersTo": "table",
       "description": "Fila de tabla con encabezado tipo caption y hover sutil, usada en historial de ventas / catálogos.",
       "html": "<div class=\"ds-table-wrapper\"><table class=\"ds-table\"><thead><tr><th>Cliente</th><th class=\"ds-right\">Total</th></tr></thead><tbody><tr><td>Ana Pérez</td><td class=\"ds-right\">Bs 240</td></tr></tbody></table></div>",
-      "css": ".ds-table-wrapper { overflow-x: auto; border: 1px solid #eaeaea; border-radius: 10px; background: #ffffff; } .ds-table { width: 100%; border-collapse: collapse; font-size: 14px; } .ds-table th { text-align: left; font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; color: #5f5e5b; padding: 12px 16px; border-bottom: 1px solid #eaeaea; white-space: nowrap; } .ds-table td { padding: 12px 16px; border-bottom: 1px solid #eaeaea; color: #111111; } .ds-table tbody tr:last-child td { border-bottom: none; } .ds-table tbody tr:hover { background: #f7f6f3; } .ds-right { text-align: right; }"
+      "css": ".ds-table-wrapper { overflow-x: auto; border: 1px solid #e6e9f4; border-radius: 12px; background: #ffffff; box-shadow: 0 1px 2px rgba(16,24,40,0.05); } .ds-table { width: 100%; border-collapse: collapse; font-size: 14px; } .ds-table th { text-align: left; font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; color: #64748b; padding: 12px 16px; border-bottom: 1px solid #e6e9f4; white-space: nowrap; } .ds-table td { padding: 12px 16px; border-bottom: 1px solid #e6e9f4; color: #111827; } .ds-table tbody tr:last-child td { border-bottom: none; } .ds-table tbody tr:hover { background: #f4f6fb; } .ds-right { text-align: right; }"
     },
     {
       "name": "Success Toast",
@@ -141,7 +164,7 @@
       "refersTo": "toast",
       "description": "Confirmación de mutation exitosa (venta registrada, cliente creado).",
       "html": "<div class=\"ds-toast ds-toast--success\">Venta registrada</div>",
-      "css": ".ds-toast { padding: 12px 16px; border-radius: 6px; box-shadow: 0 2px 8px rgba(17,17,17,0.04); font-size: 14px; max-width: 360px; border: 1px solid transparent; } .ds-toast--success { background: #edf3ec; color: #346538; border-color: #cfe3cd; }"
+      "css": ".ds-toast { padding: 12px 16px; border-radius: 8px; box-shadow: 0 12px 24px rgba(16,24,40,0.1); font-size: 14px; max-width: 360px; border: 1px solid transparent; } .ds-toast--success { background: #dcfce7; color: #16a34a; border-color: #bbf7d0; }"
     },
     {
       "name": "Empty State",
@@ -149,38 +172,48 @@
       "refersTo": "empty-state",
       "description": "Reemplaza una tabla en blanco con copy explícito y una acción opcional.",
       "html": "<div class=\"ds-empty\"><div class=\"ds-empty-icon\">🧾</div><p class=\"ds-empty-title\">Aún no registraste ventas</p><p class=\"ds-empty-desc\">Cuando confirmes tu primera venta, aparecerá acá.</p></div>",
-      "css": ".ds-empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 48px 24px; color: #5f5e5b; } .ds-empty-icon { font-size: 32px; margin-bottom: 8px; } .ds-empty-title { font-size: 15px; font-weight: 500; color: #111111; margin: 0; } .ds-empty-desc { font-size: 13px; margin: 0; max-width: 340px; }"
+      "css": ".ds-empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 48px 24px; color: #64748b; } .ds-empty-icon { font-size: 32px; margin-bottom: 8px; } .ds-empty-title { font-size: 15px; font-weight: 500; color: #111827; margin: 0; } .ds-empty-desc { font-size: 13px; margin: 0; max-width: 340px; }"
+    },
+    {
+      "name": "FAB",
+      "kind": "button",
+      "refersTo": "fab",
+      "description": "Botón flotante circular, atajo a la acción principal de la pantalla (ver Dashboard). Nuevo en v2.",
+      "html": "<button class=\"ds-fab\" aria-label=\"Nueva venta\">+</button>",
+      "css": ".ds-fab { position: fixed; right: 24px; bottom: 24px; width: 48px; height: 48px; border-radius: 999px; background: #111111; color: #ffffff; font-size: 24px; border: none; box-shadow: 0 12px 24px rgba(16,24,40,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color 140ms cubic-bezier(0.23,1,0.32,1), transform 140ms cubic-bezier(0.23,1,0.32,1); } .ds-fab:hover { background: #2d2d2d; } .ds-fab:active { transform: scale(0.94); }"
     }
   ],
   "narrative": {
-    "northStar": "The Ledger",
-    "overview": "Tinta casi negra sobre papel cálido, líneas finas en vez de sombra, un único acento sólido reservado para la acción principal. El sistema se comporta como un libro contable bien llevado: cada fila, cada campo, cada botón declara su función sin adorno, y el color se reserva casi por completo para lo funcional (peligro, éxito) en vez de lo decorativo. No hay tipografía de gran escala ni gestos visuales que compitan con los datos.",
+    "northStar": "Clarity",
+    "overview": "Panel de control claro y profesional: fondo azulado muy pálido, tarjetas blancas con sombra suave real, badges en pastilla para todo estado (stock, variación %, rol), y un acento azul para navegación/información secundaria conviviendo con el negro sólido reservado a la acción principal. Reemplaza a \"The Ledger\" (v1, monocromática, casi sin sombra) a partir de mockups de Stitch provistos por el usuario (2026-07-14): Login, Panel/Dashboard, Productos, Ventas.",
     "keyCharacteristics": [
-      "Monocromático cálido: casi todo resuelto en escala de grises tibios, color solo para estado y acento primario.",
-      "Prácticamente sin sombra: la separación la da el borde de 1px, no la elevación.",
-      "Un solo gesto de movimiento: compresión (scale 0.97) al presionar.",
-      "Sin escala tipográfica hero: el título más grande del sistema es 16px/600.",
-      "Modo oscuro completo por prefers-color-scheme."
+      "Superficie azulada pálida (bg #f4f6fb) en vez del papel cálido de v1.",
+      "Sombra suave real en reposo (shadow-md en cards/topbar) — v1 la reservaba a overlays.",
+      "Badges en pastilla de 3 estados (success/warning/danger) para KPI, stock, rol — v2 agrega warning, v1 solo tenía 2.",
+      "Escala tipográfica más amplia: page-title sube a 28px/700 (v1 topeaba en 20px).",
+      "Acento azul (#2563eb) para navegación/enlaces informativos, además del negro de acción principal.",
+      "Radios más grandes (8/12/16px vs 6/10/12px de v1) + nuevo radius-full para badges/FAB/paginación."
     ],
     "rules": [
-      { "name": "La Regla del Acento Único", "body": "El negro (#111111) es el único acento no funcional del sistema; peligro y éxito solo comunican estado.", "section": "colors" },
-      { "name": "La Regla del Techo Bajo", "body": "Ningún texto supera los 20px (el h1 de página, consistente en las 5 pantallas); todo lo demás vive en 16px o menos. La jerarquía vive en peso y color, no en tamaño.", "section": "typography" },
-      { "name": "La Regla de Plano-por-Defecto", "body": "Ninguna superficie en reposo lleva sombra perceptible; la sombra marca únicamente lo que flota sobre la página (modal, toast).", "section": "elevation" }
+      { "name": "La Regla del Acento Doble", "body": "Negro (#111111) para la acción principal de cada pantalla, azul (#2563eb) para navegación/información secundaria — reemplaza la Regla del Acento Único de v1.", "section": "colors" },
+      { "name": "La Regla de Elevación Real", "body": "Las superficies elevadas (card, topbar, tabla) llevan shadow-sm/shadow-md en reposo, no solo en overlays — reemplaza la Regla de Plano-por-Defecto de v1.", "section": "elevation" },
+      { "name": "La Regla de Estado en Pastilla", "body": "Toda variación/estado se comunica con una pastilla radius-full de fondo pálido + texto/borde del color de estado, nunca con texto plano de color suelto.", "section": "components" }
     ],
     "dos": [
-      "Do mantener el color como recurso escaso: negro para la acción primaria, ladrillo/bosque solo para estado.",
-      "Do resolver la separación entre superficies con borde de 1px antes que con sombra.",
-      "Do anticipar en la interfaz las reglas de negocio que el backend va a rechazar (stock, permisos, duplicados).",
+      "Do usar shadow-md como elevación por defecto de cards/KPI/topbar, no como excepción.",
+      "Do usar badges en pastilla (fondo pálido + borde + texto) para todo estado: KPI, stock (3 niveles), rol.",
+      "Do mantener el negro exclusivo para la acción principal de cada pantalla; el azul es para lo secundario.",
+      "Do seguir anticipando en la interfaz las reglas de negocio que el backend va a rechazar (stock, permisos, duplicados) — esto no cambió de v1.",
       "Do usar copy explícito en estados vacíos en vez de una tabla en blanco.",
       "Do anular toda animación bajo prefers-reduced-motion: reduce."
     ],
     "donts": [
-      "Don't introducir sombras decorativas en cards o filas de tabla en reposo.",
-      "Don't usar tablas densísimas sin jerarquía, iconos genéricos, ni aspecto ERP de escritorio anticuado.",
-      "Don't usar gradientes decorativos, hero-metrics, tarjetas de KPI idénticas ni eyebrows en mayúscula.",
-      "Don't subir ningún texto por encima de 20px (el h1 de página) ni introducir una segunda familia tipográfica de display.",
-      "Don't usar border-left/border-right de color como acento decorativo.",
-      "Don't dejar el estilo por defecto de una librería sin re-tematizar a esta paleta."
+      "Don't reintroducir la sombra casi invisible de v1 (0 1px 2px rgba(17,17,17,0.03)) como shadow-sm.",
+      "Don't agregar enlaces o controles que impliquen funcionalidad de backend inexistente (recuperar contraseña, solicitar acceso, \"recordarme\") sin marcarlos como pendientes.",
+      "Don't mezclar radios de v1 (6/10/12px) con los de v2 (8/12/16px) en el mismo componente.",
+      "Don't usar tablas densísimas sin jerarquía, iconos genéricos, ni aspecto ERP de escritorio anticuado — esto sigue vigente de v1.",
+      "Don't usar gradientes decorativos ni glassmorphism — el color de v2 es funcional (estado/jerarquía), no decorativo puro.",
+      "Don't dejar el badge de stock en solo 2 estados — Productos usa 3 (success/warning/danger)."
     ]
   }
 }

@@ -30,12 +30,6 @@
   fill: var(--color-text);
 }
 
-.area {
-  fill: var(--color-primary);
-  opacity: 0.1;
-  stroke: none;
-}
-
 .line {
   fill: none;
   stroke: var(--color-primary);

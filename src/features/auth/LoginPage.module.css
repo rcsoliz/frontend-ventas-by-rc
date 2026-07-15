@@ -3,31 +3,137 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-4);
+  padding: var(--space-5);
+  background: var(--color-bg);
 }
 
 .card {
   width: 100%;
-  max-width: 360px;
+  max-width: 400px;
+  padding: var(--space-6) var(--space-5);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+  padding-bottom: var(--space-5);
+  margin-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+  margin-bottom: var(--space-1);
 }
 
 .title {
-  font-size: 22px;
-  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
 }
 
 .subtitle {
   font-size: 14px;
   color: var(--color-text-muted);
-  text-align: center;
-  margin-top: var(--space-1);
-  margin-bottom: var(--space-5);
+  margin: 0;
 }
 
 .form {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+}
+
+/* Icono a la izquierda de cada input: se resuelve como background-image del
+   propio <input>, no como overlay absoluto sobre el wrapper. Así queda
+   centrado verticalmente respecto de la caja real del input sin depender
+   de la altura del label que lo precede. */
+.usernameField input,
+.passwordField input {
+  background-repeat: no-repeat;
+  background-position: 12px center;
+  background-size: 18px 18px;
+  padding-left: 40px;
+}
+
+.usernameField input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E");
+}
+
+.passwordField {
+  position: relative;
+}
+
+.passwordField input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2' ry='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E");
+  padding-right: 40px;
+}
+
+/* Overlay invisible: replica la estructura label+gap del Input real
+   (mismo font-size/weight/gap) para que el toggle de mostrar/ocultar
+   contraseña quede centrado exactamente sobre el input, sin pixel-math
+   frágil ni tocar Input.tsx. */
+.passwordOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  pointer-events: none;
+}
+
+.overlayLabel {
+  font-size: 13px;
+  font-weight: 500;
+  visibility: hidden;
+}
+
+.overlayInputRow {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: var(--space-1);
+}
+
+.toggleButton {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-subtle);
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+}
+
+.toggleButton:hover {
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+}
+
+.toggleButton:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
 }
 
 .submit {
@@ -37,6 +143,7 @@
 
 .error {
   font-size: 13px;
+  font-weight: 500;
   color: var(--color-danger);
   background: var(--color-danger-bg);
   border: 1px solid var(--color-danger-border);

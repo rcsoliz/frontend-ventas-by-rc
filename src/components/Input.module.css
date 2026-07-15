@@ -45,6 +45,28 @@
   color: var(--color-text-subtle);
 }
 
+.hintNotice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  padding: 5px var(--space-2);
+}
+
+.hintNotice::before {
+  content: "";
+  flex-shrink: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+}
+
 .error {
   font-size: 12px;
   color: var(--color-danger);
