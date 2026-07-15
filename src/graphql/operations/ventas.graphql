@@ -11,6 +11,14 @@ query Ventas {
       idVendedor
       nombreCompleto
     }
+    detalles {
+      cantidad
+      subtotal
+      producto {
+        idProducto
+        nombreProducto
+      }
+    }
   }
 }
 

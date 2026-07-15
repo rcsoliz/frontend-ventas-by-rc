@@ -1,0 +1,60 @@
+.chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 140px) 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  border-radius: var(--radius-sm);
+}
+
+.label {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.track {
+  min-width: 0;
+}
+
+.bar {
+  height: 20px;
+  background: var(--color-primary);
+  border-radius: 0 4px 4px 0;
+  min-width: 2px;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.barHover {
+  background: var(--color-primary-hover);
+}
+
+.value {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tooltip {
+  position: absolute;
+  right: 0;
+  top: -26px;
+  background: var(--color-text);
+  color: var(--color-primary-text);
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1;
+}

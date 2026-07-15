@@ -102,8 +102,18 @@ export function AppLayout({ children }: { children: ReactNode }) {
           </button>
         </div>
         <nav className={styles.nav}>
+          {esAdmin && (
+            <NavLink
+              ref={firstNavLinkRef}
+              to="/panel"
+              className={({ isActive }) => navClass(isActive)}
+              onClick={closeDrawer}
+            >
+              Panel
+            </NavLink>
+          )}
           <NavLink
-            ref={firstNavLinkRef}
+            ref={esAdmin ? undefined : firstNavLinkRef}
             to="/ventas"
             className={({ isActive }) => navClass(isActive)}
             onClick={closeDrawer}
