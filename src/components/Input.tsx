@@ -1,8 +1,8 @@
 import { useId } from "react";
-import type { InputHTMLAttributes } from "react";
+import type { InputHTMLAttributes, ReactNode } from "react";
 import styles from "./Input.module.css";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "prefix"> {
   label: string;
   error?: string;
   hint?: string;
@@ -13,9 +13,20 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
    * posible duplicado que no bloquea el envío).
    */
   hintTone?: "subtle" | "notice";
+  /** Contenido fijo dentro del campo, a la izquierda (ej. "Bs" en montos, o un ícono). Puramente visual. */
+  prefix?: ReactNode;
 }
 
-export function Input({ label, error, hint, hintTone = "subtle", id, className, ...rest }: InputProps) {
+export function Input({
+  label,
+  error,
+  hint,
+  hintTone = "subtle",
+  prefix,
+  id,
+  className,
+  ...rest
+}: InputProps) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const errorId = error ? `${inputId}-error` : undefined;
@@ -26,15 +37,27 @@ export function Input({ label, error, hint, hintTone = "subtle", id, className, 
       <label htmlFor={inputId} className={styles.label}>
         {label}
       </label>
-      <input
-        id={inputId}
-        className={[styles.input, error && styles.inputError, className]
-          .filter(Boolean)
-          .join(" ")}
-        aria-invalid={Boolean(error) || undefined}
-        aria-describedby={errorId ?? hintId}
-        {...rest}
-      />
+      <div className={prefix ? styles.inputWrapper : undefined}>
+        {prefix && (
+          <span className={styles.prefix} aria-hidden="true">
+            {prefix}
+          </span>
+        )}
+        <input
+          id={inputId}
+          className={[
+            styles.input,
+            prefix && styles.inputWithPrefix,
+            error && styles.inputError,
+            className,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          aria-invalid={Boolean(error) || undefined}
+          aria-describedby={errorId ?? hintId}
+          {...rest}
+        />
+      </div>
       {hint && !error && (
         <span
           id={hintId}

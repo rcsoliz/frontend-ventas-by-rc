@@ -11,7 +11,7 @@ import type { TableColumn } from "../../components/Table";
 import { Modal } from "../../components/Modal";
 import { Pagination, paginar } from "../../components/Pagination";
 import { useToast } from "../../components/Toast";
-import { IconPlus, IconUser } from "../../components/icons";
+import { IconPlus, IconSearch, IconUser } from "../../components/icons";
 import { useConfirmacionInline } from "../../hooks/useConfirmacionInline";
 import { useOrdenamiento, ordenarPor } from "../../hooks/useOrdenamiento";
 import { useAuth } from "../auth/AuthContext";
@@ -24,7 +24,7 @@ import styles from "./ClientesPage.module.css";
 
 type Cliente = ClientesQuery["clientes"][number];
 
-const TAMANO_PAGINA = 10;
+const TAMANO_PAGINA = 8;
 
 function obtenerValorCliente(c: Cliente, key: string): string {
   switch (key) {
@@ -102,9 +102,27 @@ export function ClientesPage() {
       ),
       sortable: true,
     },
-    { key: "correo", header: "Correo", render: (c) => c.correo, sortable: true },
+    {
+      key: "correo",
+      header: "Correo",
+      render: (c) => (
+        <span className={styles.truncar} title={c.correo}>
+          {c.correo}
+        </span>
+      ),
+      sortable: true,
+    },
     { key: "telefono", header: "Teléfono", render: (c) => c.telefono, sortable: true },
-    { key: "direccion", header: "Dirección", render: (c) => c.direccion, sortable: true },
+    {
+      key: "direccion",
+      header: "Dirección",
+      render: (c) => (
+        <span className={styles.truncar} title={c.direccion}>
+          {c.direccion}
+        </span>
+      ),
+      sortable: true,
+    },
     ...(alcance === "todos"
       ? [
           {
@@ -123,6 +141,7 @@ export function ClientesPage() {
           {
             key: "acciones",
             header: "Acciones",
+            sticky: true,
             render: (c: Cliente) => (
               <div className={styles.acciones}>
                 <Button
@@ -186,6 +205,7 @@ export function ClientesPage() {
             <Input
               label="Buscar"
               placeholder="Nombre del cliente..."
+              prefix={<IconSearch />}
               value={busqueda}
               onChange={(e) => {
                 setBusqueda(e.target.value);

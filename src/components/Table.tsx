@@ -9,6 +9,8 @@ export interface TableColumn<T> {
   render: (row: T) => ReactNode;
   align?: "left" | "right" | "center";
   sortable?: boolean;
+  /** Fija la columna al borde derecho (ej. Acciones), visible aunque la tabla scrollee horizontalmente. */
+  sticky?: boolean;
 }
 
 interface TableProps<T> {
@@ -41,7 +43,11 @@ export function Table<T>({
               return (
                 <th
                   key={col.key}
-                  className={[styles[col.align ?? "left"], puedeOrdenar && styles.sortable]
+                  className={[
+                    styles[col.align ?? "left"],
+                    puedeOrdenar && styles.sortable,
+                    col.sticky && styles.stickyRight,
+                  ]
                     .filter(Boolean)
                     .join(" ")}
                   onClick={puedeOrdenar ? () => onSortChange(col.key) : undefined}
@@ -89,7 +95,12 @@ export function Table<T>({
               }
             >
               {columns.map((col) => (
-                <td key={col.key} className={styles[col.align ?? "left"]}>
+                <td
+                  key={col.key}
+                  className={[styles[col.align ?? "left"], col.sticky && styles.stickyRight]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
                   {col.render(row)}
                 </td>
               ))}

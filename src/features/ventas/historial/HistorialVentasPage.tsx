@@ -4,6 +4,7 @@ import { Button } from "../../../components/Button";
 import { Card } from "../../../components/Card";
 import { EmptyState } from "../../../components/EmptyState";
 import { Input } from "../../../components/Input";
+import { IconSearch } from "../../../components/icons";
 import { KebabMenu } from "../../../components/KebabMenu";
 import { Select } from "../../../components/Select";
 import { SkeletonTable } from "../../../components/Skeleton";
@@ -21,7 +22,7 @@ import styles from "./HistorialVentasPage.module.css";
 
 type Venta = VentasQuery["ventas"][number];
 
-const TAMANO_PAGINA = 10;
+const TAMANO_PAGINA = 8;
 
 function obtenerValorVenta(v: Venta, key: string): string | number {
   switch (key) {
@@ -81,6 +82,7 @@ export function HistorialVentasPage() {
       key: "acciones",
       header: "Acciones",
       align: "right",
+      sticky: true,
       render: (v) => (
         <KebabMenu
           label={`Acciones para la venta de ${v.cliente.nombreCompleto}`}
@@ -101,31 +103,34 @@ export function HistorialVentasPage() {
       <VentasTabs />
 
       {!loading && !error && ventas.length > 0 && (
-        <div className={styles.filtersBlock}>
-          <span className={styles.filtersLabel}>Filtrar por</span>
-          <div className={styles.filters}>
-            <Input
-              label="Buscar"
-              placeholder="Cliente o vendedor..."
-              value={busqueda}
-              onChange={(e) => {
-                setBusqueda(e.target.value);
-                setPagina(1);
-              }}
-            />
-            <Select
-              label="Alcance"
-              value={alcance}
-              onChange={(e) => {
-                setAlcance(e.target.value as "todas" | "mias");
-                setPagina(1);
-              }}
-            >
-              <option value="todas">Todas las ventas</option>
-              <option value="mias">Solo mis ventas</option>
-            </Select>
+        <Card className={styles.filtersCard}>
+          <div className={styles.filtersBlock}>
+            <span className={styles.filtersLabel}>Filtrar por</span>
+            <div className={styles.filters}>
+              <Input
+                label="Buscar"
+                placeholder="Cliente o vendedor..."
+                prefix={<IconSearch />}
+                value={busqueda}
+                onChange={(e) => {
+                  setBusqueda(e.target.value);
+                  setPagina(1);
+                }}
+              />
+              <Select
+                label="Alcance"
+                value={alcance}
+                onChange={(e) => {
+                  setAlcance(e.target.value as "todas" | "mias");
+                  setPagina(1);
+                }}
+              >
+                <option value="todas">Todas las ventas</option>
+                <option value="mias">Solo mis ventas</option>
+              </Select>
+            </div>
           </div>
-        </div>
+        </Card>
       )}
 
       <Card>

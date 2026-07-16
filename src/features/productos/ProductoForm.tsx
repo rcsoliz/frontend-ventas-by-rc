@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { Input } from "../../components/Input";
+import { Textarea } from "../../components/Textarea";
 import { Button } from "../../components/Button";
 import { useActualizarProducto, useCrearProducto } from "./hooks";
 import { extraerMensajeError } from "../../graphql/errors";
@@ -125,8 +126,9 @@ export function ProductoForm({
         hintTone="notice"
         required
       />
-      <Input
+      <Textarea
         label="Descripción"
+        rows={3}
         value={descripcion}
         onChange={(e) => {
           setDescripcion(e.target.value);
@@ -141,6 +143,7 @@ export function ProductoForm({
           type="number"
           min="0.01"
           step="0.01"
+          prefix="Bs"
           value={precio}
           onChange={(e) => {
             setPrecio(e.target.value);

@@ -26,6 +26,10 @@
   font-size: 14px;
 }
 
+.table thead tr {
+  background: var(--color-bg);
+}
+
 .table th {
   text-align: left;
   font-weight: 500;
@@ -80,6 +84,25 @@
 .sortable:focus-visible {
   outline: none;
   box-shadow: inset 0 0 0 2px var(--color-focus-ring);
+}
+
+.stickyRight {
+  position: sticky;
+  right: 0;
+  z-index: 1;
+  box-shadow: -8px 0 8px -8px rgba(17, 17, 17, 0.12);
+}
+
+.table th.stickyRight {
+  background: var(--color-bg);
+}
+
+.table td.stickyRight {
+  background: var(--color-surface);
+}
+
+.table tbody tr:hover .stickyRight {
+  background: var(--color-bg);
 }
 
 .left {

@@ -6,7 +6,11 @@ import {
 } from "../../graphql/generated/graphql";
 
 export function useVentas() {
-  return useQuery(VentasDocument);
+  // "cache-and-network": el Dashboard e Historial muestran la caché al instante,
+  // pero siempre disparan un fetch al montar — así una venta registrada en otra
+  // pestaña/pantalla se refleja al volver, sin depender de que ese componente
+  // estuviera activo cuando corrió el refetchQueries de useRegistrarVenta.
+  return useQuery(VentasDocument, { fetchPolicy: "cache-and-network" });
 }
 
 export function useVenta(idVenta: string) {

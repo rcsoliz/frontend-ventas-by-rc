@@ -11,7 +11,7 @@ import type { TableColumn } from "../../components/Table";
 import { Modal } from "../../components/Modal";
 import { Pagination, paginar } from "../../components/Pagination";
 import { useToast } from "../../components/Toast";
-import { IconBox, IconPlus } from "../../components/icons";
+import { IconBox, IconPlus, IconSearch } from "../../components/icons";
 import { useConfirmacionInline } from "../../hooks/useConfirmacionInline";
 import { useOrdenamiento, ordenarPor } from "../../hooks/useOrdenamiento";
 import { useAuth } from "../auth/AuthContext";
@@ -25,7 +25,7 @@ import styles from "./ProductosPage.module.css";
 
 type Producto = ProductosQuery["productos"][number];
 
-const TAMANO_PAGINA = 10;
+const TAMANO_PAGINA = 8;
 
 /**
  * El schema de GraphQL no expone un campo de stock mínimo por producto (ver
@@ -118,7 +118,16 @@ export function ProductosPage() {
       ),
       sortable: true,
     },
-    { key: "descripcion", header: "Descripción", render: (p) => p.descripcion, sortable: true },
+    {
+      key: "descripcion",
+      header: "Descripción",
+      render: (p) => (
+        <span className={styles.descripcionCelda} title={p.descripcion}>
+          {p.descripcion}
+        </span>
+      ),
+      sortable: true,
+    },
     {
       key: "precio",
       header: "Precio",
@@ -151,6 +160,7 @@ export function ProductosPage() {
           {
             key: "acciones",
             header: "Acciones",
+            sticky: true,
             render: (p: Producto) => (
               <div className={styles.acciones}>
                 <Button
@@ -216,6 +226,7 @@ export function ProductosPage() {
             <Input
               label="Buscar"
               placeholder="Nombre del producto..."
+              prefix={<IconSearch />}
               value={busqueda}
               onChange={(e) => {
                 setBusqueda(e.target.value);

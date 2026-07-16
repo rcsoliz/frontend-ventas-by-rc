@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ventas - Gestión de Productos</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#93000a",
+                    "primary-container": "#131b2e",
+                    "surface": "#f8f9ff",
+                    "on-tertiary-fixed-variant": "#2f2ebe",
+                    "on-secondary-fixed-variant": "#920028",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed-dim": "#bec6e0",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#213145",
+                    "secondary-container": "#e21e49",
+                    "primary": "#000000",
+                    "surface-dim": "#cbdbf5",
+                    "on-secondary-container": "#fffbff",
+                    "on-primary-fixed": "#131b2e",
+                    "tertiary-fixed-dim": "#c0c1ff",
+                    "tertiary-container": "#07006c",
+                    "outline-variant": "#c6c6cd",
+                    "on-primary": "#ffffff",
+                    "surface-variant": "#d3e4fe",
+                    "surface-container": "#e5eeff",
+                    "on-tertiary": "#ffffff",
+                    "inverse-primary": "#bec6e0",
+                    "on-primary-container": "#7c839b",
+                    "tertiary-fixed": "#e1e0ff",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#45464d",
+                    "on-error": "#ffffff",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#565e74",
+                    "on-tertiary-container": "#7073ff",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-tertiary-fixed": "#07006c",
+                    "primary-fixed": "#dae2fd",
+                    "inverse-on-surface": "#eaf1ff",
+                    "outline": "#76777d",
+                    "surface-container-low": "#eff4ff",
+                    "surface-bright": "#f8f9ff",
+                    "tertiary": "#000000",
+                    "on-surface": "#0b1c30",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "secondary": "#ba0035",
+                    "background": "#f8f9ff",
+                    "on-background": "#0b1c30",
+                    "secondary-fixed": "#ffdada",
+                    "secondary-fixed-dim": "#ffb3b6",
+                    "on-secondary-fixed": "#40000c",
+                    "surface-container-high": "#dce9ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "2rem",
+                    "stack-sm": "0.5rem",
+                    "container-max": "1440px",
+                    "margin-mobile": "1rem",
+                    "stack-md": "1rem",
+                    "gutter": "1.5rem",
+                    "stack-lg": "2rem"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-xl": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                    "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+                    "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                    "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                    "headline-md": ["18px", { "lineHeight": "28px", "fontWeight": "600" }],
+                    "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                    "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9ff;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .data-table-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        }
+        .modal-overlay {
+            background-color: rgba(11, 28, 48, 0.4);
+            backdrop-filter: blur(4px);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-background text-on-background overflow-x-hidden">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-screen w-[260px] bg-white border-r border-outline-variant flex flex-col h-full py-6 shadow-sm z-50">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white">inventory_2</span>
+</div>
+<div>
+<h1 class="text-headline-lg font-headline-lg font-bold text-on-surface">Ventas</h1>
+<p class="text-label-sm text-on-primary-container">Gestión Comercial</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container transition-colors duration-200 rounded-lg mx-2 my-1" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Panel</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container transition-colors duration-200 rounded-lg mx-2 my-1" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md">Ventas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container transition-colors duration-200 rounded-lg mx-2 my-1" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md text-label-md">Clientes</span>
+</a>
+<!-- Active State: Productos -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary text-white rounded-lg mx-2 my-1 scale-95 transition-transform duration-150 shadow-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label-md text-label-md">Productos</span>
+</a>
+</nav>
+<div class="mt-auto px-2">
+<div class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 rounded-lg">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">person</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Administrador Uno</span>
+<span class="text-[10px] text-outline">Super User</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar (Shared Component) -->
+<header class="fixed top-0 right-0 h-16 bg-surface border-b border-outline-variant flex items-center justify-between px-margin-desktop w-full ml-[260px] max-w-[calc(100%-260px)] z-40">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-10 pr-4 py-2 text-body-md focus:ring-2 focus:ring-primary-container focus:border-primary outline-none transition-all" placeholder="Buscar en el sistema..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-3 cursor-pointer hover:bg-surface-container-low p-1 pr-3 rounded-full transition-all">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-primary-container flex items-center justify-center">
+<span class="text-white text-xs font-bold">A1</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-[260px] pt-16 min-h-screen">
+<div class="p-8 max-w-[1440px] mx-auto">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+<div>
+<h2 class="font-headline-xl text-headline-xl text-on-surface">Productos</h2>
+<p class="text-body-md text-on-surface-variant mt-1">Gestiona el inventario, precios y estados de tus artículos comerciales.</p>
+</div>
+<button class="flex items-center gap-2 bg-primary text-on-primary px-6 py-2.5 rounded-lg hover:bg-opacity-90 transition-all shadow-lg active:scale-95 font-medium" onclick="openModal()">
+<span class="material-symbols-outlined">add</span>
+                    Nuevo producto
+                </button>
+</div>
+<!-- Filters Section -->
+<div class="bg-white p-4 rounded-xl border border-outline-variant flex flex-col lg:flex-row gap-4 items-end lg:items-center mb-6 shadow-sm">
+<div class="w-full lg:flex-1">
+<label class="block text-label-md mb-2 text-on-surface-variant uppercase tracking-wider">Buscar</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-white border border-outline-variant rounded-lg pl-10 pr-4 h-10 text-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Nombre del producto, SKU o categoría..." type="text"/>
+</div>
+</div>
+<div class="w-full lg:w-64">
+<label class="block text-label-md mb-2 text-on-surface-variant uppercase tracking-wider">Mostrar</label>
+<select class="w-full bg-white border border-outline-variant rounded-lg px-4 h-10 text-body-md focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer">
+<option>Solo activos</option>
+<option>Inactivos</option>
+<option>Todos</option>
+</select>
+</div>
+<button class="bg-surface-container border border-outline-variant text-on-surface px-4 h-10 rounded-lg hover:bg-surface-container-high transition-colors font-medium flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+                    Filtrar
+                </button>
+</div>
+<!-- Data Table Container -->
+<div class="bg-white rounded-xl border border-outline-variant overflow-hidden data-table-shadow">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-6 py-4 text-label-md text-on-surface-variant uppercase tracking-widest font-bold">Producto</th>
+<th class="px-6 py-4 text-label-md text-on-surface-variant uppercase tracking-widest font-bold">Descripción</th>
+<th class="px-6 py-4 text-label-md text-on-surface-variant uppercase tracking-widest font-bold">Precio</th>
+<th class="px-6 py-4 text-label-md text-on-surface-variant uppercase tracking-widest font-bold">Stock</th>
+<th class="px-6 py-4 text-label-md text-on-surface-variant uppercase tracking-widest font-bold text-center">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-background transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined">cable</span>
+</div>
+<span class="font-medium text-body-lg text-on-surface">Cable HDMI 2m</span>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md text-on-surface-variant max-w-xs truncate">Producto de alta velocidad 4K con conectores chapados en oro.</td>
+<td class="px-6 py-4 font-mono font-semibold text-primary">Bs 12,50</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-full border border-green-100">30 unid.</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center justify-center gap-2">
+<button class="px-4 py-1.5 border border-outline-variant text-on-surface hover:bg-surface-container-low rounded-lg transition-all text-label-md font-bold">Editar</button>
+<button class="px-4 py-1.5 bg-secondary text-white hover:bg-opacity-90 rounded-lg transition-all text-label-md font-bold shadow-sm">Desactivar</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-background transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined">monitor</span>
+</div>
+<span class="font-medium text-body-lg text-on-surface">Monitor 24" Full HD</span>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md text-on-surface-variant max-w-xs truncate">Panel IPS, 75Hz, marco ultra delgado ideal para oficina.</td>
+<td class="px-6 py-4 font-mono font-semibold text-primary">Bs 950,00</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-yellow-50 text-yellow-700 text-xs font-bold rounded-full border border-yellow-100">19 unid.</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center justify-center gap-2">
+<button class="px-4 py-1.5 border border-outline-variant text-on-surface hover:bg-surface-container-low rounded-lg transition-all text-label-md font-bold">Editar</button>
+<button class="px-4 py-1.5 bg-secondary text-white hover:bg-opacity-90 rounded-lg transition-all text-label-md font-bold shadow-sm">Desactivar</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-background transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined">mouse</span>
+</div>
+<span class="font-medium text-body-lg text-on-surface">Mouse Inalámbrico M170</span>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md text-on-surface-variant max-w-xs truncate">Diseño ergonómico compacto, conexión 2.4GHz estable.</td>
+<td class="px-6 py-4 font-mono font-semibold text-primary">Bs 85,50</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-full border border-green-100">98 unid.</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center justify-center gap-2">
+<button class="px-4 py-1.5 border border-outline-variant text-on-surface hover:bg-surface-container-low rounded-lg transition-all text-label-md font-bold">Editar</button>
+<button class="px-4 py-1.5 bg-secondary text-white hover:bg-opacity-90 rounded-lg transition-all text-label-md font-bold shadow-sm">Desactivar</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-background transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined">desk</span>
+</div>
+<span class="font-medium text-body-lg text-on-surface">Silla Ergonómica Pro</span>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md text-on-surface-variant max-w-xs truncate">Soporte lumbar ajustable, malla transpirable, base aluminio.</td>
+<td class="px-6 py-4 font-mono font-semibold text-primary">Bs 890,00</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-red-50 text-red-700 text-xs font-bold rounded-full border border-red-100">4 unid.</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center justify-center gap-2">
+<button class="px-4 py-1.5 border border-outline-variant text-on-surface hover:bg-surface-container-low rounded-lg transition-all text-label-md font-bold">Editar</button>
+<button class="px-4 py-1.5 bg-secondary text-white hover:bg-opacity-90 rounded-lg transition-all text-label-md font-bold shadow-sm">Desactivar</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-surface-container-low border-t border-outline-variant flex items-center justify-between">
+<p class="text-body-md text-on-surface-variant">Mostrando 1 a 10 de 125 resultados</p>
+<div class="flex items-center gap-2">
+<button class="p-2 border border-outline-variant rounded-lg hover:bg-white transition-all disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="px-4 py-2 bg-primary text-white rounded-lg font-bold text-label-md">1</button>
+<button class="px-4 py-2 border border-outline-variant rounded-lg hover:bg-white text-on-surface font-bold text-label-md">2</button>
+<button class="px-4 py-2 border border-outline-variant rounded-lg hover:bg-white text-on-surface font-bold text-label-md">3</button>
+<span class="text-outline">...</span>
+<button class="p-2 border border-outline-variant rounded-lg hover:bg-white transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Modal Backdrop -->
+<div class="fixed inset-0 z-[60] modal-overlay hidden flex items-center justify-center p-4" id="modal-overlay">
+<!-- New Product Modal -->
+<div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="product-modal">
+<div class="px-8 py-6 border-b border-outline-variant flex items-center justify-between bg-surface-container-low">
+<h3 class="font-headline-lg text-headline-lg text-on-surface">Nuevo producto</h3>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors" onclick="closeModal()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<form class="p-8 space-y-6">
+<div>
+<label class="block text-label-md text-on-surface-variant uppercase tracking-wider mb-2">Nombre del producto</label>
+<input class="w-full bg-white border border-outline-variant rounded-lg px-4 py-2.5 text-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Ej. Monitor 24'' UltraGear" type="text"/>
+</div>
+<div>
+<label class="block text-label-md text-on-surface-variant uppercase tracking-wider mb-2">Descripción</label>
+<textarea class="w-full bg-white border border-outline-variant rounded-lg px-4 py-2.5 text-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Detalles técnicos, garantía, etc..." rows="3"></textarea>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-label-md text-on-surface-variant uppercase tracking-wider mb-2">Precio (Bs)</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-outline font-mono">Bs</span>
+<input class="w-full bg-white border border-outline-variant rounded-lg pl-10 pr-4 py-2.5 text-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="0.00" step="0.01" type="number"/>
+</div>
+</div>
+<div>
+<label class="block text-label-md text-on-surface-variant uppercase tracking-wider mb-2">Stock Inicial</label>
+<input class="w-full bg-white border border-outline-variant rounded-lg px-4 py-2.5 text-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="0" type="number"/>
+</div>
+</div>
+<div class="flex items-center justify-end gap-4 pt-4 border-t border-outline-variant">
+<button class="px-6 py-2.5 text-on-surface-variant font-bold text-label-md hover:bg-surface-container rounded-lg transition-colors" onclick="closeModal()" type="button">
+                        Cancelar
+                    </button>
+<button class="bg-primary text-white px-8 py-2.5 rounded-lg font-bold text-label-md shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95" type="submit">
+                        Crear producto
+                    </button>
+</div>
+</form>
+</div>
+</div>
+<script>
+        const overlay = document.getElementById('modal-overlay');
+        const modal = document.getElementById('product-modal');
+
+        function openModal() {
+            overlay.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('scale-95', 'opacity-0');
+                modal.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            modal.classList.remove('scale-100', 'opacity-100');
+            modal.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 300);
+        }
+
+        // Close on backdrop click
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeModal();
+        });
+
+        // ESC key to close
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !overlay.classList.contains('hidden')) closeModal();
+        });
+    </script>
+</body></html>

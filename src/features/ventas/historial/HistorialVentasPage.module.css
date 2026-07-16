@@ -4,6 +4,10 @@
   gap: var(--space-5);
 }
 
+.filtersCard {
+  padding: var(--space-4);
+}
+
 .filtersBlock {
   display: flex;
   flex-direction: column;

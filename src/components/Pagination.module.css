@@ -4,7 +4,11 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: var(--space-3);
-  padding-top: var(--space-4);
+  margin: var(--space-4) calc(-1 * var(--space-5)) calc(-1 * var(--space-5));
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
 }
 
 .status {
