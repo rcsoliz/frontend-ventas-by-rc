@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Badge } from "../../components/Badge";
 import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
@@ -58,13 +59,17 @@ function obtenerValorProducto(p: Producto, key: string): string | number {
 }
 
 export function ProductosPage() {
+  const location = useLocation();
   const [alcance, setAlcance] = useState<"activos" | "todos">("activos");
   const { data, loading, error } = useProductos(alcance === "activos");
   const { vendedor } = useAuth();
   const puedeGestionarProductos = esAdministrador(vendedor);
   const [modalAbierto, setModalAbierto] = useState(false);
   const [productoEditando, setProductoEditando] = useState<Producto | null>(null);
-  const [busqueda, setBusqueda] = useState("");
+  // Llega prefiltrado cuando se navega desde un resultado del buscador general (ver GlobalSearch).
+  const [busqueda, setBusqueda] = useState(
+    () => (location.state as { busqueda?: string } | null)?.busqueda ?? ""
+  );
   const [pagina, setPagina] = useState(1);
   const { showToast } = useToast();
   const [cambiarEstadoProducto] = useCambiarEstadoProducto();

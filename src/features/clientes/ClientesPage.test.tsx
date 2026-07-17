@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import { MockedProvider } from "@apollo/client/testing/react";
 import { AuthProvider } from "../auth/AuthContext";
 import { ToastProvider } from "../../components/Toast";
@@ -28,13 +29,15 @@ function seedVendedor(grupos: string[]) {
 
 function renderClientesPage(mocks: unknown[]) {
   return render(
-    <MockedProvider mocks={mocks as never}>
-      <AuthProvider>
-        <ToastProvider>
-          <ClientesPage />
-        </ToastProvider>
-      </AuthProvider>
-    </MockedProvider>
+    <MemoryRouter>
+      <MockedProvider mocks={mocks as never}>
+        <AuthProvider>
+          <ToastProvider>
+            <ClientesPage />
+          </ToastProvider>
+        </AuthProvider>
+      </MockedProvider>
+    </MemoryRouter>
   );
 }
 

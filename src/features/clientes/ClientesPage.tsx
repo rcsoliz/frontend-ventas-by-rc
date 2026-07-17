@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Badge } from "../../components/Badge";
 import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
@@ -42,13 +43,17 @@ function obtenerValorCliente(c: Cliente, key: string): string {
 }
 
 export function ClientesPage() {
+  const location = useLocation();
   const [alcance, setAlcance] = useState<"activos" | "todos">("activos");
   const { data, loading, error } = useClientes(alcance === "activos");
   const { vendedor } = useAuth();
   const puedeEditarClientes = esAdministrador(vendedor);
   const [modalAbierto, setModalAbierto] = useState(false);
   const [clienteEditando, setClienteEditando] = useState<Cliente | null>(null);
-  const [busqueda, setBusqueda] = useState("");
+  // Llega prefiltrado cuando se navega desde un resultado del buscador general (ver GlobalSearch).
+  const [busqueda, setBusqueda] = useState(
+    () => (location.state as { busqueda?: string } | null)?.busqueda ?? ""
+  );
   const [pagina, setPagina] = useState(1);
   const { showToast } = useToast();
   const [cambiarEstadoCliente] = useCambiarEstadoCliente();

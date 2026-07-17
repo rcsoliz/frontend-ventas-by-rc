@@ -3,6 +3,9 @@ import type { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../features/auth/AuthContext";
 import { esAdministrador } from "../features/auth/grupos";
+import { useTheme } from "../hooks/useTheme";
+import { GlobalSearch } from "../features/busqueda/GlobalSearch";
+import { IconMoon, IconSun } from "../components/icons";
 import styles from "./AppLayout.module.css";
 
 const MOBILE_QUERY = "(max-width: 768px)";
@@ -90,15 +93,6 @@ function IconProductos() {
   );
 }
 
-function IconSearch() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <circle cx="7" cy="7" r="4.5" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M13.5 13.5L10.6 10.6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 function IconBell() {
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -109,20 +103,6 @@ function IconBell() {
         strokeLinejoin="round"
       />
       <path d="M7.2 14.5a1.8 1.8 0 003.6 0" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function IconGear() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-      <circle cx="9" cy="9" r="2.3" stroke="currentColor" strokeWidth="1.6" />
-      <path
-        d="M9 2.6v1.6M9 13.8v1.6M15.4 9h-1.6M4.2 9H2.6M13.3 4.7l-1.1 1.1M5.8 12.2l-1.1 1.1M13.3 13.3l-1.1-1.1M5.8 5.8L4.7 4.7"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
     </svg>
   );
 }
@@ -141,6 +121,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const { vendedor, logout } = useAuth();
   const esAdmin = esAdministrador(vendedor);
   const isMobile = useIsMobile();
+  const { tema, alternarTema } = useTheme();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const firstNavLinkRef = useRef<HTMLAnchorElement>(null);
@@ -268,28 +249,24 @@ export function AppLayout({ children }: { children: ReactNode }) {
       </aside>
 
       <div className={styles.main}>
-        {/* Topbar desktop, ver Dashboard.png. Buscador/campana/engranaje son
-            visuales por ahora: no hay backend de búsqueda global ni de
-            notificaciones ni pantalla de configuración todavía. */}
+        {/* Topbar desktop, ver Dashboard.png. La campana sigue siendo visual
+            por ahora: no hay backend de notificaciones todavía. El buscador
+            y el toggle de tema sí son funcionales (ver GlobalSearch y
+            useTheme). */}
         <header className={styles.desktopTopbar}>
-          <div className={styles.searchField}>
-            <IconSearch />
-            <label htmlFor="app-search" className={styles.srOnly}>
-              Buscar en el sistema
-            </label>
-            <input
-              id="app-search"
-              type="search"
-              className={styles.searchInput}
-              placeholder="Buscar en el sistema..."
-            />
-          </div>
+          <GlobalSearch />
           <div className={styles.topbarActions}>
             <button type="button" className={styles.iconButton} aria-label="Notificaciones">
               <IconBell />
             </button>
-            <button type="button" className={styles.iconButton} aria-label="Configuración">
-              <IconGear />
+            <button
+              type="button"
+              className={styles.iconButton}
+              aria-label={tema === "oscuro" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+              aria-pressed={tema === "oscuro"}
+              onClick={alternarTema}
+            >
+              {tema === "oscuro" ? <IconMoon /> : <IconSun />}
             </button>
             <span className={styles.avatarCircle} aria-hidden="true">
               {iniciales(nombre)}

@@ -48,6 +48,33 @@ export function IconSearch(props: IconProps) {
   );
 }
 
+export function IconSun(props: IconProps) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" {...props}>
+      <circle cx="9" cy="9" r="2.3" stroke="currentColor" strokeWidth="1.6" />
+      <path
+        d="M9 2.6v1.6M9 13.8v1.6M15.4 9h-1.6M4.2 9H2.6M13.3 4.7l-1.1 1.1M5.8 12.2l-1.1 1.1M13.3 13.3l-1.1-1.1M5.8 5.8L4.7 4.7"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export function IconMoon(props: IconProps) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M14.5 10.4A5.6 5.6 0 0 1 7.6 3.5a5.6 5.6 0 1 0 6.9 6.9Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function IconChevronLeft(props: IconProps) {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" {...props}>
